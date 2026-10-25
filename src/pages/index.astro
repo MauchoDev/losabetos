@@ -1,16 +1,18 @@
 ---
+import Base from '../layouts/Base.astro';
+import { es } from '../content/es';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base>
+	<main>
+		<section id="inicio" class="section" aria-label={es.sections.hero}></section>
+		<section id="pilares" class="section" aria-label={es.sections.pillars}></section>
+		<section id="cabanas" class="section" aria-label={es.sections.cabins}></section>
+		<section id="galeria" class="section" aria-label={es.sections.gallery}></section>
+		<section id="resenas" class="section" aria-label={es.sections.reviews}></section>
+		<section id="zona" class="section" aria-label={es.sections.zone}></section>
+		<section id="reservar" class="section" aria-label={es.sections.contact}></section>
+		<section id="preguntas" class="section" aria-label={es.sections.faq}></section>
+	</main>
+	<footer id="footer" class="section"></footer>
+</Base>
