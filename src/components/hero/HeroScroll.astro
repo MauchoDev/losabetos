@@ -1,0 +1,45 @@
+---
+import { es } from '../../content/es';
+---
+
+<a class="scroll" href="#cabanas" aria-label={es.hero.scrollLabel}>
+	<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+		<path d="M12 4v16M5.5 13.5 12 20l6.5-6.5" />
+	</svg>
+</a>
+
+<style>
+	.scroll {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: var(--control-lg);
+		height: var(--control-lg);
+		border: var(--border-width) solid var(--line-on-dark);
+		border-radius: 50%;
+		color: var(--text-on-dark);
+		transition:
+			background var(--duration-fast) var(--ease-out),
+			color var(--duration-fast) var(--ease-out);
+	}
+
+	.scroll:hover {
+		background: var(--text-on-dark);
+		color: var(--cta-text);
+	}
+
+	svg {
+		width: var(--space-6);
+		height: var(--space-6);
+		fill: none;
+		stroke: currentColor;
+		stroke-width: var(--stroke-icon);
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		vector-effect: non-scaling-stroke;
+	}
+
+	svg :global(path) {
+		vector-effect: non-scaling-stroke;
+	}
+</style>

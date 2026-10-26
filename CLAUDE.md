@@ -8,7 +8,7 @@ Fecha objetivo de publicación (propuesta): 22 de noviembre de 2026.
 
 ## Alcance v1 (cerrado)
 Una página, español neutro (sin voseo ni chilenismos). Secciones, en este orden:
-1. Hero con barra de consulta
+1. Hero (titular, CTA y datos; la barra de llegada, salida y personas vive en el formulario)
 2. Tres pilares (tranquilidad cerca de la ciudad, limpieza y detalle, anfitriones atentos)
 3. Las cabañas (comodidades en grilla bento)
 4. Galería
@@ -25,7 +25,7 @@ reservas, sincronización de calendarios, pagos, panel de administración.
 - Astro (última estable) + TypeScript estricto. Sitio estático, sin framework de UI.
 - CSS con variables (`src/styles/tokens.css`) y estilos scoped por componente. Sin Tailwind:
   los tokens son la única fuente de valores visuales, así nada se inventa sección por sección.
-- Fuentes autoalojadas: `@fontsource-variable/bricolage-grotesque` (títulos) y
+- Fuentes autoalojadas: `@fontsource/cormorant-garamond` (títulos, solo peso 300) y
   `@fontsource-variable/hanken-grotesk` (texto).
 - Imágenes con `astro:assets` (`<Image />` / `<Picture />`), formatos avif/webp.
 - Motion: CSS + `IntersectionObserver` mínimo. Sin librerías de animación.
@@ -40,9 +40,14 @@ src/
   styles/tokens.css    # único lugar con valores visuales
   styles/global.css
   components/          # Hero, Pillars, Cabins, Gallery, Reviews, Zone, Contact, Faq, Footer
+  components/hero/     # partes del hero (nav, título, texto, datos, foto, botón)
   assets/photos/       # fotos renombradas (ver tabla)
+  references/approved/ # capturas del hero aprobado (375, 768, 1280 px)
   pages/index.astro
+.claude/skills/los-abetos-design/   # estilo aprobado: tokens, reglas, ritmo y checklist
+.claude/agents/design-reviewer.md   # revisor visual de solo lectura
 BACKLOG.md
+hero-brief.md          # brief de la ronda 1 del hero (histórico; manda la skill)
 ```
 
 ## Fuentes de verdad
@@ -52,14 +57,20 @@ BACKLOG.md
   queda en `null` con comentario `TODO` y se avisa. No se publica con `null` visibles.
 - No agregar `aggregateRating` ni calificaciones en JSON-LD sin datos verificables.
 
+## Antes de tocar UI
+Usa la skill `los-abetos-design` y revisa con el agente `design-reviewer`. El hero es el estilo
+aprobado y el ejemplo canónico; sus capturas están en `src/references/approved/`.
+
 ## Dirección de diseño
 Rico y pulido, con la referencia de Stripe y Framer, pero con identidad propia: la madera ámbar de las
 cabañas contra el cielo y el lago, sobre fondos fríos de niebla y verdes de pino.
 - Paleta (en tokens): niebla, pino, salvia, ámbar, lago. El CTA es siempre ámbar.
-- Tipografía: Bricolage Grotesque para títulos (grande, apretada, con peso), Hanken Grotesk para texto.
-  Escala fluida de tokens. Líneas de menos de 75 caracteres. Alineación a la izquierda.
-- Hero: la foto del frontis a sangre y el titular a gran escala. Es el único momento memorable de la
+- Tipografía: Cormorant Garamond 300 para títulos (serif ligero de alto contraste), Hanken Grotesk para
+  texto. Escala fluida de tokens. Líneas de menos de 75 caracteres. Alineación a la izquierda.
+- Hero: oscuro, con la foto a la derecha (70 % del ancho) y su borde izquierdo fundido a pino; el
+  titular en mayúsculas a gran escala sobre la zona oscura. Es el único momento memorable de la
   página; el resto se mantiene sobrio.
+- Ritmo de secciones: alterna oscuro y claro (detalle en la skill).
 - Jerarquía de formas: radio grande para fotos, pill para controles, radio chico para chips. Sombras
   teñidas de verde (tokens), nunca gris genérico.
 - Comodidades en grilla bento con tamaños distintos según importancia, no tarjetas iguales.
@@ -78,6 +89,8 @@ cabañas contra el cielo y el lago, sobre fondos fríos de niebla y verdes de pi
 - Entrada fade-and-slide-up en cada sección y hover animado en cada tarjeta.
 - Fotos de stock genéricas o generadas por IA.
 
+Excepción aprobada por el cliente, solo para el hero: titular y nav en mayúsculas, y eyebrow sobre el titular.
+
 ## Reservas y CTA
 - Un solo botón primario, siempre con el mismo texto: «Consultar disponibilidad» (ámbar).
 - Secundarios, siempre en este orden y como enlaces de texto: Airbnb, Booking.
@@ -94,7 +107,8 @@ salvo la del hero.
 
 | Archivo original | Nombre en el proyecto | Uso |
 |---|---|---|
-| 2_exterior_cabaña_1_.jpg | exterior-frontis.jpg | Hero, OG image |
+| 2_exterior_cabaña_1_.jpg | exterior-frontis.jpg | OG image |
+| (sin registro) | exterior-frontis2.jpg | Hero (1327 px; pendiente el original en alta resolución y su retoque) |
 | IMG-20260415-WA0026.jpg | living.jpg | Cabañas, galería |
 | cocina.jpg | comedor-cocina.jpg | Cabañas, galería |
 | 3_cama_2_plazas.jpg | dormitorio-matrimonial.jpg | Galería |
@@ -105,14 +119,15 @@ salvo la del hero.
 ## Calidad (siempre)
 - Responsive: revisar en 375, 768 y 1280 px.
 - Accesibilidad: contraste AA, foco visible, labels en el formulario, objetivos táctiles de al menos 44 px.
-- Rendimiento: LCP menor a 2,5 s en móvil, sin saltos de layout, JS mínimo, hero con preload.
+- Rendimiento: LCP menor a 2,5 s en móvil, sin saltos de layout, JS mínimo, foto del hero con `priority`.
 - SEO local: `lang="es"`, título y descripción, canonical, Open Graph, sitemap, JSON-LD
   (`LodgingBusiness` con la dirección de Parque Ivian, Puerto Varas).
 
 ## Flujo de trabajo
-1. Una sección a la vez. Para cada una: plan breve (con wireframe ASCII), construcción, crítica
-   con capturas en 375, 768 y 1280 px. Solo después se pasa a la siguiente.
-2. En la crítica, revisar la sección contra «Anti-patrones prohibidos» y «Definición de listo».
+1. Una sección a la vez. Para cada una: plan breve (con wireframe ASCII), construcción con la skill
+   `los-abetos-design`, crítica con capturas en 375, 768 y 1280 px. Solo después se pasa a la siguiente.
+2. En la crítica, revisar la sección con `design-reviewer`, contra «Anti-patrones prohibidos» y
+   «Definición de listo».
 3. Un commit por sección: `feat(sección): …`.
 4. Si falta información que cambia el diseño, preguntar antes de decidir.
 5. Ideas nuevas van a `BACKLOG.md`. No se agregan al código de v1.
@@ -126,3 +141,20 @@ salvo la del hero.
 - [ ] OG image, favicon, sitemap y JSON-LD verificados.
 - [ ] Publicado en un dominio propio.
 Cuando todo esté marcado, se publica y el proyecto se cierra. Lo demás es v2.
+
+## Estado y pendientes abiertos
+Avance: 1. Hero cerrado (fase 2). Siguiente en el orden: 2. Tres pilares.
+
+El hero es la variante A (foto a la derecha con el borde fundido a pino) y es el principal: no se
+rediseña sin acuerdo del cliente. Código en `src/components/Hero.astro` y `src/components/hero/`.
+
+Pendientes que condicionan la publicación (no se resuelven inventando):
+- Foto del hero (`exterior-frontis2.jpg`, 1327 px): falta el original en alta resolución (~2400 px) y el
+  retoque (cielo azul profundo, quitar las sillas blancas). Hoy hay un filtro CSS provisorio.
+- Confirmar con los anfitriones los «10 minutos en auto» (`hero.subheadline` y `hero.facts`).
+- URL de Airbnb y Booking (`booking.airbnbUrl`, `booking.bookingUrl`): en `null`, los enlaces se ven
+  pero no enlazan.
+- Preguntas frecuentes: tono oscuro o claro sin definir (la skill propone claro).
+- Títulos de sección: tamaño sin aprobar; la primera sección que los use fija el canon en la skill.
+- Contraste AA: se mide con un script de Playwright que aún no está en el repo.
+- `design-reviewer`: creado pero sin probar en una sección real.

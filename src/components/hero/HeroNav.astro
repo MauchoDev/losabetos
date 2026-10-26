@@ -1,0 +1,116 @@
+---
+import { es } from '../../content/es';
+
+const { hero, sections, site } = es;
+const links = [
+	{ label: sections.cabins, href: '#cabanas' },
+	{ label: sections.gallery, href: '#galeria' },
+	{ label: sections.zone, href: '#zona' },
+	{ label: sections.contact, href: '#reservar' },
+];
+---
+
+<nav class="nav" aria-label={hero.nav.label}>
+	<a class="logo" href="/">{site.name}</a>
+
+	<ul class="links">
+		{links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+	</ul>
+
+	<details class="menu">
+		<summary>{hero.nav.menu}</summary>
+		<ul class="panel">
+			{links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+		</ul>
+	</details>
+</nav>
+
+<style>
+	.nav {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-8);
+		min-height: var(--hero-nav-h);
+		font-size: var(--text-xs);
+		text-transform: uppercase;
+		letter-spacing: var(--tracking-caps);
+		color: var(--text-on-dark);
+	}
+
+	a,
+	summary {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.logo {
+		font-weight: var(--weight-strong);
+	}
+
+	.links {
+		display: none;
+		gap: var(--space-8);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.links a,
+	summary {
+		display: inline-flex;
+		align-items: center;
+		min-height: var(--tap-min);
+	}
+
+	.links a:hover {
+		text-decoration: underline;
+		text-underline-offset: var(--underline-offset);
+	}
+
+	summary {
+		cursor: pointer;
+		list-style: none;
+	}
+
+	summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.panel {
+		position: absolute;
+		inset-inline: calc(var(--gutter) * -1);
+		top: 100%;
+		z-index: 2;
+		display: grid;
+		margin: 0;
+		padding: var(--space-4) var(--gutter);
+		list-style: none;
+		background: var(--bg-dark);
+		border-block: var(--border-width) solid var(--line-on-dark);
+	}
+
+	.panel a {
+		display: flex;
+		align-items: center;
+		min-height: var(--tap-min);
+	}
+
+	@media (min-width: 48rem) {
+		.links {
+			display: flex;
+		}
+
+		.menu {
+			display: none;
+		}
+	}
+</style>
+
+<script>
+	// El menú móvil se cierra al elegir un enlace.
+	document.querySelectorAll<HTMLAnchorElement>('.menu a').forEach((a) =>
+		a.addEventListener('click', () => a.closest('details')?.removeAttribute('open')),
+	);
+</script>

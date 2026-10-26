@@ -1,0 +1,31 @@
+---
+import { es } from '../../content/es';
+
+const { facts } = es.hero;
+---
+
+<ul class="facts">
+	{facts.map((fact) => <li>{fact}</li>)}
+</ul>
+
+<style>
+	.facts {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: var(--space-4);
+		margin: 0;
+		padding: var(--space-4) 0 0;
+		border-top: var(--border-width) solid var(--line-on-dark);
+		list-style: none;
+		font-size: var(--text-xs);
+		line-height: var(--leading-snug);
+		color: var(--text-on-dark);
+	}
+
+	@media (min-width: 48rem) {
+		.facts {
+			gap: var(--space-8);
+			font-size: var(--text-sm);
+		}
+	}
+</style>

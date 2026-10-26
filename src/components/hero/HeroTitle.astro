@@ -1,0 +1,57 @@
+---
+import '@fontsource/cormorant-garamond/latin-300.css';
+import { es } from '../../content/es';
+
+const { hero } = es;
+---
+
+<h1 class="headline">
+	{
+		hero.headline.map((line, i) => (
+			<span class="mask">
+				<span class="line" style={`--i: ${i}`}>
+					{line}
+				</span>
+			</span>
+		))
+	}
+</h1>
+
+<style>
+	/* Familia, peso, interlínea y tracking vienen de global.css (h1–h3) */
+	.headline {
+		font-size: var(--hero-title-size, var(--step-hero));
+		text-transform: uppercase;
+		color: var(--text-on-dark);
+	}
+
+	/* Máscara: la línea sube desde abajo del recuadro. El relleno inferior evita recortar la J. */
+	.mask {
+		display: block;
+		width: fit-content;
+		overflow: hidden;
+		padding-block-end: var(--mask-pad);
+		margin-block-end: calc(var(--mask-pad) * -1);
+	}
+
+	.line {
+		display: block;
+	}
+
+	/* Las dos líneas suben una tras otra (única secuencia del hero, junto con el zoom de la foto). */
+	@media (prefers-reduced-motion: no-preference) {
+		.line {
+			animation: hero-line var(--duration-reveal) var(--ease-out) both;
+			animation-delay: calc(var(--delay-hero-start) + var(--i) * var(--delay-hero-step));
+		}
+	}
+
+	@keyframes hero-line {
+		from {
+			transform: translateY(var(--mask-offset));
+		}
+		to {
+			transform: none;
+		}
+	}
+</style>

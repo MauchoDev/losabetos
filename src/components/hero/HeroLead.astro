@@ -1,0 +1,70 @@
+---
+import { es } from '../../content/es';
+
+const { hero, booking } = es;
+// TODO: las URL de Airbnb y Booking están en null (es.ts). Hasta tenerlas, el texto se ve pero no enlaza.
+const links = [
+	{ label: booking.airbnbLabel, url: booking.airbnbUrl },
+	{ label: booking.bookingLabel, url: booking.bookingUrl },
+];
+---
+
+<div class="lead">
+	<p class="text">{hero.subheadline}</p>
+	<a class="cta" href="#reservar">{booking.primaryCta}</a>
+	<p class="alt">
+		{
+			links.map((l) => (
+				<a href={l.url ?? undefined} target={l.url ? '_blank' : undefined} rel={l.url ? 'noopener' : undefined}>
+					{l.label}
+				</a>
+			))
+		}
+	</p>
+</div>
+
+<style>
+	.lead {
+		display: grid;
+		justify-items: start;
+		gap: var(--space-6);
+		max-width: var(--measure-narrow);
+	}
+
+	.text {
+		color: var(--text-on-dark-muted);
+		line-height: var(--leading-body);
+	}
+
+	.cta {
+		display: inline-flex;
+		align-items: center;
+		min-height: var(--control-lg);
+		padding-inline: var(--space-8);
+		border-radius: var(--radius-pill);
+		background: var(--cta-bg);
+		color: var(--cta-text);
+		font-weight: var(--weight-strong);
+		text-decoration: none;
+		transition: background var(--duration-fast) var(--ease-out);
+	}
+
+	.cta:hover {
+		background: var(--cta-bg-hover);
+	}
+
+	.alt {
+		display: flex;
+		gap: var(--space-6);
+		font-size: var(--text-sm);
+	}
+
+	.alt a {
+		display: inline-flex;
+		align-items: center;
+		min-height: var(--tap-min);
+		color: var(--text-on-dark);
+		text-decoration: underline;
+		text-underline-offset: var(--underline-offset);
+	}
+</style>

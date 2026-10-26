@@ -1,0 +1,131 @@
+---
+// Hero aprobado (variante A de la ronda 1): foto a la derecha con el borde izquierdo fundido a pino.
+// Referencia de estilo: .claude/skills/los-abetos-design/SKILL.md y src/references/approved/.
+import { es } from '../content/es';
+import HeroNav from './hero/HeroNav.astro';
+import HeroPhoto from './hero/HeroPhoto.astro';
+import HeroEyebrow from './hero/HeroEyebrow.astro';
+import HeroTitle from './hero/HeroTitle.astro';
+import HeroLead from './hero/HeroLead.astro';
+import HeroFacts from './hero/HeroFacts.astro';
+import HeroScroll from './hero/HeroScroll.astro';
+---
+
+<section class="hero" id="inicio" aria-label={es.sections.hero}>
+	<div class="top container"><HeroNav /></div>
+
+	<div class="photo"><HeroPhoto sizes="(min-width: 48rem) 70vw, 100vw" /></div>
+
+	<div class="shell container">
+		<div class="main">
+			<div class="title">
+				<HeroEyebrow />
+				<HeroTitle />
+			</div>
+			<HeroLead />
+		</div>
+		<div class="bottom">
+			<div class="facts"><HeroFacts /></div>
+			<div class="scroll"><HeroScroll /></div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.hero {
+		position: relative;
+		isolation: isolate;
+		overflow: clip;
+		background: var(--bg-dark);
+		color: var(--text-on-dark);
+	}
+
+	.top {
+		position: absolute;
+		inset-inline: 0;
+		top: 0;
+		z-index: 2;
+	}
+
+	/* Móvil: la foto va completa arriba y se funde hacia abajo con el fondo pino */
+	.photo {
+		position: relative;
+		aspect-ratio: var(--ratio-hero-photo);
+		--photo-pos: var(--hero-photo-pos-mobile);
+		mask-image: linear-gradient(to bottom, #000 var(--hero-fade-v), transparent);
+	}
+
+	/* Velo superior: profundiza el cielo y asegura el contraste del nav */
+	.photo::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(to bottom, var(--scrim-75), var(--scrim-0) var(--hero-scrim-top));
+	}
+
+	.shell {
+		position: relative;
+		display: grid;
+		gap: var(--space-12);
+		margin-top: calc(var(--space-12) * -1);
+		padding-bottom: var(--space-8);
+	}
+
+	.main {
+		display: grid;
+		gap: var(--space-8);
+	}
+
+	.title {
+		display: grid;
+		gap: var(--space-6);
+	}
+
+	.bottom {
+		display: grid;
+		gap: var(--space-6);
+	}
+
+	.scroll {
+		order: -1;
+		justify-self: end;
+	}
+
+	@media (min-width: 48rem) {
+		.photo {
+			position: absolute;
+			inset-block: 0;
+			inset-inline-end: 0;
+			width: var(--hero-photo-width);
+			aspect-ratio: auto;
+			--photo-pos: var(--hero-photo-pos);
+			mask-image:
+				linear-gradient(to top, transparent, #000 var(--hero-scrim-bottom)),
+				linear-gradient(to right, transparent var(--hero-fade-from), #000 var(--hero-fade-to));
+			mask-composite: intersect;
+		}
+
+		.shell {
+			min-height: var(--hero-height);
+			margin-top: 0;
+			padding-top: var(--hero-nav-h);
+			grid-template-rows: 1fr auto;
+			gap: var(--space-8);
+		}
+
+		.main {
+			align-self: center;
+			--hero-title-size: var(--step-hero-compact);
+		}
+
+		.bottom {
+			grid-template-columns: minmax(0, 1fr) auto;
+			align-items: end;
+			gap: var(--space-8);
+		}
+
+		.scroll {
+			order: 0;
+		}
+	}
+</style>

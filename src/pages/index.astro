@@ -1,11 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
 import { es } from '../content/es';
 ---
 
 <Base>
 	<main>
-		<section id="inicio" class="section" aria-label={es.sections.hero}></section>
+		<Hero />
 		<section id="pilares" class="section" aria-label={es.sections.pillars}></section>
 		<section id="cabanas" class="section" aria-label={es.sections.cabins}></section>
 		<section id="galeria" class="section" aria-label={es.sections.gallery}></section>

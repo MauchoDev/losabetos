@@ -1,0 +1,58 @@
+---
+import { Picture } from 'astro:assets';
+import { es } from '../../content/es';
+import photo from '../../assets/photos/exterior-frontis2.jpg';
+
+interface Props {
+	sizes: string;
+}
+
+const { sizes } = Astro.props;
+const slot = es.photos.exteriorFrontisHero;
+---
+
+<div class="frame">
+	<Picture
+		src={photo}
+		alt={slot.alt}
+		width={slot.width}
+		height={slot.height}
+		formats={['avif', 'webp']}
+		widths={[640, 960, 1327]}
+		sizes={sizes}
+		priority
+	/>
+</div>
+
+<style>
+	.frame {
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+		border-radius: inherit;
+	}
+
+	.frame :global(img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: var(--photo-pos, 50% 50%);
+		filter: var(--photo-hero-filter);
+	}
+
+	/* Zoom lento al cargar (parte de la única secuencia del hero). Sin opacidad: no retrasa el LCP. */
+	@media (prefers-reduced-motion: no-preference) {
+		.frame :global(img) {
+			animation: hero-zoom var(--duration-zoom) var(--ease-out) both;
+		}
+	}
+
+	@keyframes hero-zoom {
+		from {
+			transform: scale(var(--zoom-from));
+		}
+		to {
+			transform: none;
+		}
+	}
+</style>

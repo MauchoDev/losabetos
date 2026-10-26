@@ -16,24 +16,29 @@
 	--color-lago-500: #4a89a8;
 	--color-lago-700: #2c6580;
 
-	/* Semánticos */
+	/* Semánticos: los componentes usan estos, no la paleta directa */
 	--bg: var(--color-niebla-50);
 	--bg-alt: var(--color-niebla-100);
 	--bg-dark: var(--color-pino-900);
 	--text: var(--color-pino-900);
 	--text-muted: var(--color-pino-600);
 	--text-on-dark: var(--color-niebla-50);
+	--text-on-dark-muted: var(--color-niebla-200);
 	--border: var(--color-niebla-200);
+	--line-on-dark: rgb(246 248 249 / 0.35);
 	--cta-bg: var(--color-ambar-400);
 	--cta-bg-hover: var(--color-ambar-500);
 	--cta-text: var(--color-pino-900);
 	--link: var(--color-lago-700);
 	--focus-ring: var(--color-lago-500);
 
-	/* Tipografía */
-	--font-display: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+	/* Tipografía. Títulos: Cormorant Garamond, solo peso 300 instalado (no pedir otros pesos). */
+	--font-display: 'Cormorant Garamond', Georgia, serif;
 	--font-body: 'Hanken Grotesk Variable', system-ui, sans-serif;
+	--weight-display: 300;
+	--weight-strong: 700;
 
+	/* Escala fluida. Provisoria para títulos de sección: se ajusta con la primera sección que la use. */
 	--text-xs: clamp(0.78rem, 0.76rem + 0.1vw, 0.85rem);
 	--text-sm: clamp(0.875rem, 0.85rem + 0.12vw, 0.95rem);
 	--text-base: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
@@ -43,11 +48,19 @@
 	--text-3xl: clamp(2.5rem, 1.6rem + 4.4vw, 5rem);
 	--text-4xl: clamp(3rem, 1.6rem + 7vw, 7.5rem);
 
-	--leading-tight: 1.02;
+	/* Titular del hero. Medido: «LEJOS DEL RUIDO.» cabe en una línea a 375 px. */
+	--step-hero: clamp(2.4rem, 0.9rem + 6vw, 6.5rem);
+	--step-hero-compact: calc(var(--step-hero) * 0.82);
+
+	--leading-display: 1;
 	--leading-snug: 1.2;
 	--leading-body: 1.6;
-	--tracking-tight: -0.035em;
+	--tracking-caps: 0.12em;
 	--measure: 70ch;
+	--measure-narrow: 36ch;
+	/* Compensa descendentes (la J) dentro de la máscara overflow:hidden del titular */
+	--mask-pad: 0.12em;
+	--underline-offset: 0.3em;
 
 	/* Espaciado */
 	--space-1: 0.25rem;
@@ -63,11 +76,38 @@
 	--gutter: clamp(1.25rem, 0.5rem + 3.5vw, 3rem);
 	--container: 76rem;
 	--tap-min: 2.75rem;
+	--control-lg: calc(var(--tap-min) * 1.25);
+
+	/* Hero: estructura */
+	--hero-height: 100svh;
+	--hero-nav-h: 4.5rem;
+	--ratio-hero-photo: 1327 / 1043;
+
+	/* Hero: foto (70 % a la derecha, borde izquierdo fundido a pino; en móvil, banda arriba fundida hacia abajo) */
+	--hero-photo-width: 70%;
+	--hero-photo-pos: 0% 50%;
+	--hero-photo-pos-mobile: 50% 50%;
+	--hero-fade-from: 12%;
+	--hero-fade-to: 46%;
+	--hero-fade-v: 62%;
+
+	/* Velos sobre la foto: la oscuridad se pone en el degradé, nunca en el color del texto */
+	--scrim-0: rgb(15 42 36 / 0);
+	--scrim-50: rgb(15 42 36 / 0.5);
+	--scrim-75: rgb(15 42 36 / 0.75);
+	--scrim-90: rgb(15 42 36 / 0.9);
+	--hero-scrim-top: 30%;
+	--hero-scrim-bottom: 34%;
+	/* Retoque provisorio de la foto (hasta tener el original retocado) */
+	--photo-hero-filter: saturate(0.85) brightness(0.85);
 
 	/* Formas */
 	--radius-photo: 1.75rem;
 	--radius-chip: 0.5rem;
 	--radius-pill: 999px;
+	--border-width: 1px;
+	--focus-width: 3px;
+	--stroke-icon: calc(var(--border-width) * 1.5);
 
 	/* Sombras teñidas de pino */
 	--shadow-sm: 0 1px 2px rgb(15 42 36 / 0.08), 0 2px 6px rgb(15 42 36 / 0.06);
@@ -78,5 +118,12 @@
 	--duration-fast: 150ms;
 	--duration-base: 300ms;
 	--duration-slow: 700ms;
+	--duration-reveal: 900ms;
+	--duration-zoom: 1600ms;
 	--ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+	/* Secuencia del hero: la línea 1 parte a --delay-hero-start y la línea 2 un paso después */
+	--delay-hero-start: var(--duration-fast);
+	--delay-hero-step: calc(var(--duration-fast) * 3);
+	--zoom-from: 1.06;
+	--mask-offset: 110%;
 }
