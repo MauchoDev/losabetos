@@ -1,0 +1,203 @@
+---
+// Las cabañas, ronda 1, variante B: fila horizontal con scroll-snap, alto fijo y dos botones circulares.
+// Brief en cabanas.md.
+import { es } from '../content/es';
+import CabinsHead from './cabins/CabinsHead.astro';
+import CabinsPhoto from './cabins/CabinsPhoto.astro';
+import CabinsDetail from './cabins/CabinsDetail.astro';
+import CabinsViewer from './cabins/CabinsViewer.astro';
+import type { PhotoKey } from './cabins/photos';
+
+const { cabins } = es;
+const order: PhotoKey[] = ['living', 'cocina', 'dormitorioMatrimonial', 'dormitorioDosCamas', 'bano'];
+// 30rem de alto (--strip-h) por 4/3 = 40rem de ancho las horizontales; la vertical, 3/4 del alto
+const sizes = (key: PhotoKey) => (es.photos[key].width > es.photos[key].height ? '40rem' : '23rem');
+---
+
+<section class="cabins section" id="cabanas" aria-labelledby="cabanas-titulo">
+	<div class="container">
+		<CabinsHead />
+
+		<div class="gallery" data-strip>
+			<ul class="track" role="list" data-strip-track>
+				{
+					order.map((key) => (
+						<li class="slide">
+							<CabinsPhoto photo={key} fit="height" sizes={sizes(key)} />
+						</li>
+					))
+				}
+			</ul>
+
+			<div class="bar">
+				<p class="note">{cabins.photoNote}</p>
+				<div class="arrows" role="group" aria-label={cabins.stripNav.label}>
+					<button type="button" class="ctrl" aria-label={cabins.stripNav.prev} data-strip-prev>
+						<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12H4M10.5 5.5 4 12l6.5 6.5"></path></svg>
+					</button>
+					<button type="button" class="ctrl" aria-label={cabins.stripNav.next} data-strip-next>
+						<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h16M13.5 5.5 20 12l-6.5 6.5"></path></svg>
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="detail"><CabinsDetail /></div>
+	</div>
+
+	<CabinsViewer />
+</section>
+
+<style>
+	.cabins {
+		background: var(--bg);
+		color: var(--text);
+	}
+
+	.gallery {
+		margin-top: var(--space-16);
+	}
+
+	/* La fila sale hasta el borde de la pantalla: se ve que hay más fotos a los lados */
+	.track {
+		position: relative;
+		display: flex;
+		gap: var(--space-8);
+		margin: 0 calc(var(--gutter) * -1);
+		padding: 0 var(--gutter);
+		list-style: none;
+		overflow-x: auto;
+		overscroll-behavior-x: contain;
+		scroll-snap-type: x mandatory;
+		scroll-padding-inline: var(--gutter);
+		scrollbar-width: none;
+	}
+
+	.track::-webkit-scrollbar {
+		display: none;
+	}
+
+	.slide {
+		flex: none;
+		scroll-snap-align: start;
+	}
+
+	/* Con el contenedor ya centrado y con márgenes (76rem), el corte va en el borde del contenido */
+	@media (min-width: 76rem) {
+		.track {
+			margin-inline: 0;
+			padding-inline: 0;
+			scroll-padding-inline: 0;
+		}
+	}
+
+	.bar {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		align-items: center;
+		gap: var(--space-6);
+		margin-top: var(--space-8);
+	}
+
+	.note {
+		font-size: var(--text-xs);
+		line-height: var(--leading-snug);
+		color: var(--text-muted);
+	}
+
+	.arrows {
+		display: flex;
+		gap: var(--space-4);
+	}
+
+	/* Botón circular: el mismo del hero (HeroScroll) en tono claro, sin transición en esta sección */
+	.ctrl {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: var(--control-lg);
+		height: var(--control-lg);
+		padding: 0;
+		border: var(--border-width) solid var(--text);
+		border-radius: var(--radius-pill);
+		background: transparent;
+		color: var(--text);
+		cursor: pointer;
+	}
+
+	.ctrl:hover {
+		background: var(--text);
+		color: var(--text-on-dark);
+	}
+
+	/* En el primer o el último tramo la flecha queda apagada (sigue enfocable: no se pierde el foco) */
+	.ctrl[aria-disabled='true'] {
+		border-color: var(--line-on-light);
+		color: var(--text-muted);
+		cursor: default;
+	}
+
+	.ctrl[aria-disabled='true']:hover {
+		background: transparent;
+		color: var(--text-muted);
+	}
+
+	.ctrl svg {
+		width: var(--space-6);
+		height: var(--space-6);
+		fill: none;
+		stroke: currentColor;
+		stroke-width: var(--stroke-icon);
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	.ctrl svg :global(path) {
+		vector-effect: non-scaling-stroke;
+	}
+
+	.detail {
+		margin-top: var(--space-24);
+		padding-top: var(--space-12);
+		border-top: var(--border-width) solid var(--line-on-light);
+	}
+
+	@media (min-width: 48rem) {
+		.note {
+			font-size: var(--text-sm);
+		}
+	}
+</style>
+
+<script>
+	const strip = document.querySelector<HTMLElement>('[data-strip]');
+
+	if (strip) {
+		const track = strip.querySelector<HTMLElement>('[data-strip-track]')!;
+		const prev = strip.querySelector<HTMLButtonElement>('[data-strip-prev]')!;
+		const next = strip.querySelector<HTMLButtonElement>('[data-strip-next]')!;
+		const slides = Array.from(track.children) as HTMLElement[];
+		const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+		// Posición de cada foto dentro de la fila, descontando el relleno lateral (--gutter)
+		const edge = () => parseFloat(getComputedStyle(track).paddingLeft);
+		const left = (slide: HTMLElement) => slide.offsetLeft - edge();
+
+		const go = (target: HTMLElement | undefined) => {
+			if (target) track.scrollTo({ left: left(target), behavior: reduce.matches ? 'auto' : 'smooth' });
+		};
+
+		const sync = () => {
+			const atStart = track.scrollLeft <= 1;
+			const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 1;
+			prev.setAttribute('aria-disabled', String(atStart));
+			next.setAttribute('aria-disabled', String(atEnd));
+		};
+
+		prev.addEventListener('click', () => go([...slides].reverse().find((s) => left(s) < track.scrollLeft - 1)));
+		next.addEventListener('click', () => go(slides.find((s) => left(s) > track.scrollLeft + 1)));
+		track.addEventListener('scroll', sync, { passive: true });
+		window.addEventListener('resize', sync);
+		sync();
+	}
+</script>

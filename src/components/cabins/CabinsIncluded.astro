@@ -1,0 +1,59 @@
+---
+import { es } from '../../content/es';
+
+const { includedTitle, included } = es.cabins;
+const items: readonly { name: string; detail?: string }[] = included;
+---
+
+<div class="included">
+	<h3 class="heading">{includedTitle}</h3>
+	<ul class="list">
+		{
+			items.map((item) => (
+				<li>
+					<span class="name">{item.name}</span>
+					{item.detail && <span class="detail">{item.detail}</span>}
+				</li>
+			))
+		}
+	</ul>
+</div>
+
+<style>
+	.heading {
+		font-size: var(--text-xl);
+		color: var(--text);
+	}
+
+	.list {
+		display: grid;
+		margin: var(--space-6) 0 0;
+		padding: 0;
+		list-style: none;
+		font-size: var(--text-sm);
+		line-height: var(--leading-snug);
+	}
+
+	.list li {
+		display: grid;
+		align-content: start;
+		gap: var(--space-1);
+		padding-block: var(--space-4);
+		border-top: var(--border-width) solid var(--line-on-light);
+	}
+
+	.name {
+		color: var(--text);
+	}
+
+	.detail {
+		color: var(--text-muted);
+	}
+
+	@media (min-width: 48rem) {
+		.list {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			column-gap: var(--space-8);
+		}
+	}
+</style>

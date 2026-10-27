@@ -7,6 +7,8 @@
 	--color-pino-800: #153a31;
 	--color-pino-700: #1d4d41;
 	--color-pino-600: #2a6657;
+	/* salvia-100: el «salvia suave» del brief de Las cabañas (salvia-300 al 35 % sobre niebla-50) */
+	--color-salvia-100: #dfe8e3;
 	--color-salvia-300: #b5c9bc;
 	--color-salvia-500: #7f9d8a;
 	--color-ambar-400: #e8a33d;
@@ -19,6 +21,8 @@
 	/* Semánticos: los componentes usan estos, no la paleta directa */
 	--bg: var(--color-niebla-50);
 	--bg-alt: var(--color-niebla-100);
+	/* Ficha de precio de Las cabañas: la única superficie con relleno de la sección */
+	--bg-panel: var(--color-salvia-100);
 	--bg-dark: var(--color-pino-900);
 	--text: var(--color-pino-900);
 	--text-muted: var(--color-pino-600);
@@ -26,6 +30,8 @@
 	--text-on-dark-muted: var(--color-niebla-200);
 	--border: var(--color-niebla-200);
 	--line-on-dark: rgb(246 248 249 / 0.35);
+	/* Par de --line-on-dark para secciones claras y para la ficha (salvia). --border es muy tenue sobre niebla. */
+	--line-on-light: rgb(15 42 36 / 0.25);
 	--cta-bg: var(--color-ambar-400);
 	--cta-bg-hover: var(--color-ambar-500);
 	--cta-text: var(--color-pino-900);
@@ -51,6 +57,9 @@
 	/* Titular del hero. Medido: «LEJOS DEL RUIDO.» cabe en una línea a 375 px. */
 	--step-hero: clamp(2.4rem, 0.9rem + 6vw, 6.5rem);
 	--step-hero-compact: calc(var(--step-hero) * 0.82);
+	/* Titular de sección (canon fijado por Las cabañas). Medido: más chico que el del hero en todos los anchos
+	   (31 px a 375, 41 px a 768 y 53 px a 1280, contra 38, 50 y 75 px). --text-3xl pasa al hero a 1280 px. */
+	--step-section: var(--text-2xl);
 
 	--leading-display: 1;
 	--leading-snug: 1.2;
@@ -77,13 +86,17 @@
 	--container: 76rem;
 	--tap-min: 2.75rem;
 	--control-lg: calc(var(--tap-min) * 1.25);
+	/* Capa del nav del hero y de su panel móvil (por encima de la foto y su velo) */
+	--z-nav: 2;
 
 	/* Hero: estructura */
 	--hero-height: 100svh;
 	--hero-nav-h: 4.5rem;
+	/* = width / height del slot photos.exteriorFrontisHero en es.ts (CSS no puede leerlos) */
 	--ratio-hero-photo: 1327 / 1043;
 
-	/* Hero: foto (70 % a la derecha, borde izquierdo fundido a pino; en móvil, banda arriba fundida hacia abajo) */
+	/* Hero: foto (70 % a la derecha, borde izquierdo fundido a pino; en móvil, banda arriba fundida hacia abajo).
+	   El 70 % también está en el atributo sizes de Hero.astro (70vw): mantenerlos iguales. */
 	--hero-photo-width: 70%;
 	--hero-photo-pos: 0% 50%;
 	--hero-photo-pos-mobile: 50% 50%;
@@ -101,12 +114,20 @@
 	/* Retoque provisorio de la foto (hasta tener el original retocado) */
 	--photo-hero-filter: saturate(0.85) brightness(0.85);
 
+	/* Las cabañas: fotos. Ancho máximo en una columna = la mitad del archivo más chico (1200 px), para que
+	   ninguna foto pase de su resolución real ni en pantallas x2. */
+	--photo-max-width: 37.5rem;
+	/* Variante B: altura fija de la fila de fotos (las horizontales miden 4/3 de ese alto; 30rem = 480 px,
+	   la mitad del alto del archivo, también seguro en x2) */
+	--strip-h: clamp(14rem, 6rem + 30vw, 30rem);
+
 	/* Formas */
 	--radius-photo: 1.75rem;
 	--radius-chip: 0.5rem;
 	--radius-pill: 999px;
 	--border-width: 1px;
 	--focus-width: 3px;
+	--focus-offset: 3px;
 	--stroke-icon: calc(var(--border-width) * 1.5);
 
 	/* Sombras teñidas de pino */
@@ -120,6 +141,8 @@
 	--duration-slow: 700ms;
 	--duration-reveal: 900ms;
 	--duration-zoom: 1600ms;
+	/* Con prefers-reduced-motion: reduce las animaciones terminan en un cuadro (ver global.css) */
+	--duration-instant: 0.01ms;
 	--ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 	/* Secuencia del hero: la línea 1 parte a --delay-hero-start y la línea 2 un paso después */
 	--delay-hero-start: var(--duration-fast);

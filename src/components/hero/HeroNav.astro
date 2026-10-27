@@ -46,6 +46,9 @@ const links = [
 	}
 
 	.logo {
+		display: inline-flex;
+		align-items: center;
+		min-height: var(--tap-min);
 		font-weight: var(--weight-strong);
 	}
 
@@ -82,7 +85,7 @@ const links = [
 		position: absolute;
 		inset-inline: calc(var(--gutter) * -1);
 		top: 100%;
-		z-index: 2;
+		z-index: var(--z-nav);
 		display: grid;
 		margin: 0;
 		padding: var(--space-4) var(--gutter);

@@ -17,11 +17,15 @@ no supongas cómo se ve lo que no viste.
 2. Mira las capturas aprobadas en `src/references/approved/` (`hero-375.png`, `hero-768.png`,
    `hero-1280.png`, `hero-375-menu.png`) y, si hace falta, `src/references/hero-ref-cabin-wild.png.webp`.
 3. Mira cada captura nueva, ancho por ancho, y compáralas con el tono que le toca a la sección en la
-   tabla de ritmo de la skill (oscuro o claro).
+   tabla de ritmo de la skill (oscuro o claro). El alcance son 5 secciones y el footer: Hero, Las
+   cabañas, Reseñas, La zona y Reservar. Una sección que no esté en la tabla es P0.
 4. Lee el código de la sección (`src/components/...`) y `src/styles/tokens.css`. Busca con Grep valores
    sueltos: `[0-9]+(px|rem|em|ms)` fuera de `@media`, `#[0-9a-fA-F]{3,8}`, `rgb\(`, `font-weight: *[0-9]`,
    `var\(--color-`, `--font-` distintas de display y body, y texto en el markup que no venga de `es.ts`.
 5. Revisa el contenido real contra `src/content/es.ts` (claves usadas, `null` visibles, datos inventados).
+6. Si la sección tiene un brief propio en la raíz (por ejemplo `cabanas.md`) y pide algo que contradice
+   la skill o `CLAUDE.md` (mayúsculas fuera del hero, tokens que no existen, tarjetas iguales), no
+   elijas bando: repórtalo como P0 «conflicto de brief» para que decida el agente principal o el cliente.
 
 ## Qué revisar
 - Tokens: color semántico del tono, tipografía (Cormorant 300 en títulos, Hanken en texto), espaciado,
@@ -33,8 +37,10 @@ no supongas cómo se ve lo que no viste.
 - Fotos: radio, retoque `--photo-hero-filter`, `alt`, `width`/`height`, `lazy` salvo el hero, nada
   pixelado, y texto sobre foto con velo y sin tapar la cabaña.
 - Movimiento: solo respuestas a acciones; nada de entradas por scroll; `prefers-reduced-motion`.
-- Responsive y accesibilidad: desborde horizontal, palabras cortadas, objetivos de al menos 44 px,
-  foco visible, contraste.
+- Responsive y accesibilidad: desborde horizontal, palabras cortadas, objetivos de al menos `--tap-min`
+  de alto (44 px), foco visible, contraste.
+- Parecido al hero sin copiarlo: misma tipografía, tokens, líneas finas y trato de foto, pero no repetir
+  sus excepciones (mayúsculas, eyebrow, botón circular, foto sin radio) ni su composición.
 
 ## Límites
 No puedes medir contraste en píxeles ni abrir el sitio. Si sospechas de un contraste, márcalo como

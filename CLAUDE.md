@@ -7,18 +7,16 @@ Público: chilenos y argentinos (familias, parejas, grupos de hasta 5). Inglés 
 Fecha objetivo de publicación (propuesta): 22 de noviembre de 2026.
 
 ## Alcance v1 (cerrado)
-Una página, español neutro (sin voseo ni chilenismos). Secciones, en este orden:
-1. Hero (titular, CTA y datos; la barra de llegada, salida y personas vive en el formulario)
-2. Tres pilares (tranquilidad cerca de la ciudad, limpieza y detalle, anfitriones atentos)
-3. Las cabañas (comodidades en grilla bento)
-4. Galería
-5. Reseñas reales
-6. La zona (tiempos en auto)
-7. Cómo reservar / formulario
-8. Preguntas frecuentes
-9. Footer
+Una página, español neutro (sin voseo ni chilenismos). 5 secciones más el footer, en este orden:
+1. Hero (titular, CTA y datos)
+2. Las cabañas (fotos, comodidades y ficha con CTA; brief en `cabanas.md`)
+3. Reseñas reales
+4. La zona (tiempos en auto)
+5. Cómo reservar / formulario
+- Footer
 
-Fuera de alcance (va a `BACKLOG.md`, nunca al código): inglés, invierno y empresas, blog, motor de
+Fuera de alcance (va a `BACKLOG.md`, nunca al código): Tres pilares, galería aparte y preguntas
+frecuentes (salieron de v1 el 26 de octubre de 2026), inglés, invierno y empresas, blog, motor de
 reservas, sincronización de calendarios, pagos, panel de administración.
 
 ## Stack
@@ -39,14 +37,16 @@ src/
   content/es.ts        # único lugar con texto
   styles/tokens.css    # único lugar con valores visuales
   styles/global.css
-  components/          # Hero, Pillars, Cabins, Gallery, Reviews, Zone, Contact, Faq, Footer
-  components/hero/     # partes del hero (nav, título, texto, datos, foto, botón)
-  assets/photos/       # fotos renombradas (ver tabla)
-  references/approved/ # capturas del hero aprobado (375, 768, 1280 px)
+  components/          # Hero, Cabins, Reviews, Zone, Contact, Footer
+  components/hero/     # partes del hero (nav, eyebrow, título, texto, datos, foto, botón circular)
+  assets/photos/       # exteriores (hero y OG image), renombradas (ver tabla)
+  assets/fotos/        # interiores, renombrados (ver tabla); pendiente unificar con photos/
+  references/approved/ # capturas del hero aprobado (375, 768 y 1280 px, y el menú móvil)
   pages/index.astro
 .claude/skills/los-abetos-design/   # estilo aprobado: tokens, reglas, ritmo y checklist
 .claude/agents/design-reviewer.md   # revisor visual de solo lectura
 BACKLOG.md
+cabanas.md             # brief de la sección Las cabañas (en curso; ver pendientes)
 hero-brief.md          # brief de la ronda 1 del hero (histórico; manda la skill)
 ```
 
@@ -58,8 +58,8 @@ hero-brief.md          # brief de la ronda 1 del hero (histórico; manda la skil
 - No agregar `aggregateRating` ni calificaciones en JSON-LD sin datos verificables.
 
 ## Antes de tocar UI
-Usa la skill `los-abetos-design` y revisa con el agente `design-reviewer`. El hero es el estilo
-aprobado y el ejemplo canónico; sus capturas están en `src/references/approved/`.
+Antes de tocar UI, usa la skill `los-abetos-design` y revisa con `design-reviewer`. El hero es el
+estilo aprobado y el ejemplo canónico; sus capturas están en `src/references/approved/`.
 
 ## Dirección de diseño
 Rico y pulido, con la referencia de Stripe y Framer, pero con identidad propia: la madera ámbar de las
@@ -70,10 +70,12 @@ cabañas contra el cielo y el lago, sobre fondos fríos de niebla y verdes de pi
 - Hero: oscuro, con la foto a la derecha (70 % del ancho) y su borde izquierdo fundido a pino; el
   titular en mayúsculas a gran escala sobre la zona oscura. Es el único momento memorable de la
   página; el resto se mantiene sobrio.
-- Ritmo de secciones: alterna oscuro y claro (detalle en la skill).
+- Ritmo de secciones: Hero oscuro, Las cabañas claro, Reseñas oscuro, La zona claro, Reservar oscuro,
+  footer claro (detalle en la skill).
 - Jerarquía de formas: radio grande para fotos, pill para controles, radio chico para chips. Sombras
   teñidas de verde (tokens), nunca gris genérico.
-- Comodidades en grilla bento con tamaños distintos según importancia, no tarjetas iguales.
+- Las cabañas: fotos en rejilla editorial asimétrica y comodidades en una lista con líneas finas
+  (`cabanas.md`), no en tarjetas bento ni tarjetas iguales.
 - Movimiento: una sola secuencia orquestada al cargar el hero. Lo demás solo responde a acciones
   (abrir, enviar, enfocar). Respetar `prefers-reduced-motion`.
 
@@ -109,11 +111,11 @@ salvo la del hero.
 |---|---|---|
 | 2_exterior_cabaña_1_.jpg | exterior-frontis.jpg | OG image |
 | (sin registro) | exterior-frontis2.jpg | Hero (1327 px; pendiente el original en alta resolución y su retoque) |
-| IMG-20260415-WA0026.jpg | living.jpg | Cabañas, galería |
-| cocina.jpg | comedor-cocina.jpg | Cabañas, galería |
-| 3_cama_2_plazas.jpg | dormitorio-matrimonial.jpg | Galería |
-| IMG-20260415-WA0023.jpg | dormitorio-dos-camas.jpg | Galería |
-| 1_BAÑO.jpg | bano.jpg | Galería |
+| IMG-20260415-WA0026.jpg | living.jpg | Las cabañas |
+| cocina.jpg | cocina.jpg | Las cabañas |
+| 3_cama_2_plazas.jpg | dormitorio-matrimonial.jpg | Las cabañas |
+| IMG-20260415-WA0023.jpg | dormitorio-dos-camas.jpg | Las cabañas |
+| 1_BAÑO.jpg | bano.jpg | Las cabañas |
 | IMG-20260415-WA0028.jpg | (reserva) | No usar por ahora |
 
 ## Calidad (siempre)
@@ -133,7 +135,7 @@ salvo la del hero.
 5. Ideas nuevas van a `BACKLOG.md`. No se agregan al código de v1.
 
 ## Definición de listo (cuando se cumple, v1 está terminado)
-- [ ] Las 9 secciones construidas con contenido de `es.ts`, sin ningún `null` ni `TODO` visible.
+- [ ] Las 5 secciones y el footer construidos con contenido de `es.ts`, sin ningún `null` ni `TODO` visible.
 - [ ] Formulario probado de punta a punta: la consulta llega al mail y el honeypot bloquea spam.
 - [ ] Links de Airbnb y Booking correctos.
 - [ ] Lighthouse móvil de 90 o más en Rendimiento, Accesibilidad, Buenas prácticas y SEO.
@@ -143,10 +145,17 @@ salvo la del hero.
 Cuando todo esté marcado, se publica y el proyecto se cierra. Lo demás es v2.
 
 ## Estado y pendientes abiertos
-Avance: 1. Hero cerrado (fase 2). Siguiente en el orden: 2. Tres pilares.
+Avance: 1. Hero cerrado (fase 2). 2. Las cabañas: ronda 1 construida, a la espera de que el cliente elija
+entre `/cabanas-a` (rejilla editorial, `CabinsA.astro`) y `/cabanas-b` (fila con scroll-snap,
+`CabinsB.astro`). Al elegir: renombrar la ganadora a `Cabins.astro`, integrarla en `index.astro` (ancla
+`#cabanas`) y borrar la otra variante y su página. Piezas compartidas en `src/components/cabins/`.
 
 El hero es la variante A (foto a la derecha con el borde fundido a pino) y es el principal: no se
 rediseña sin acuerdo del cliente. Código en `src/components/Hero.astro` y `src/components/hero/`.
+
+Alcance reducido el 26 de octubre de 2026 (Tres pilares, Galería y Preguntas frecuentes salieron de
+v1). Aún sin alinear con el nuevo alcance: `index.astro` (tiene secciones vacías de pilares, galería y
+preguntas), `es.ts` (`sections.pillars`, `gallery`, `faq`) y el nav del hero, que enlaza a `#galeria`.
 
 Pendientes que condicionan la publicación (no se resuelven inventando):
 - Foto del hero (`exterior-frontis2.jpg`, 1327 px): falta el original en alta resolución (~2400 px) y el
@@ -154,7 +163,23 @@ Pendientes que condicionan la publicación (no se resuelven inventando):
 - Confirmar con los anfitriones los «10 minutos en auto» (`hero.subheadline` y `hero.facts`).
 - URL de Airbnb y Booking (`booking.airbnbUrl`, `booking.bookingUrl`): en `null`, los enlaces se ven
   pero no enlazan.
-- Preguntas frecuentes: tono oscuro o claro sin definir (la skill propone claro).
-- Títulos de sección: tamaño sin aprobar; la primera sección que los use fija el canon en la skill.
-- Contraste AA: se mide con un script de Playwright que aún no está en el repo.
-- `design-reviewer`: creado pero sin probar en una sección real.
+- Las cabañas pone el titular en mayúsculas porque `cabanas.md` lo pide y dice que manda sobre este
+  archivo; la ronda 1 lo hace así. Falta confirmar con el cliente si Reseñas, La zona y Reservar siguen
+  igual o solo el hero y Las cabañas (hoy la skill lo deja abierto). Los tokens del brief
+  (`--color-niebla`, `--color-pino`, `--color-salvia-suave`) se tradujeron a `--bg`, `--text` y
+  `--bg-panel` (nuevo, salvia-100).
+- Precio «desde» ($110.000 CLP) y estadía mínima (1 noche) entraron a `es.ts` desde `cabanas.md`, aún sin
+  confirmar con los anfitriones (TODO en `es.ts`: si el precio es por cabaña y si «Temporada alta» es
+  correcto). No se publica sin esa confirmación.
+- Fotos de Las cabañas: `living.jpg` y `cocina.jpg` muestran la misma cocina con isla, casi desde el
+  mismo ángulo, y en ninguna se ve el futón-cama ni la TV; el pie «Living» no corresponde a lo que se ve.
+  Falta una foto del living y otro ángulo del comedor. El piso de `dormitorio-matrimonial.jpg` refleja
+  azul: una corrección automática dejó manchas, va con retoque manual (como lente y verticales rectas de
+  todas, que necesitan los originales: hoy son archivos de WhatsApp de 1280 px).
+- `cabanas.md` nombra `comedor-cocina.jpg`; el archivo del proyecto es `cocina.jpg` (se usó ese).
+- Footer: tono claro propuesto para seguir la alternancia tras Reservar oscuro; sin confirmar.
+- Títulos de sección y campos del formulario: sin aprobar; Las cabañas y Reservar fijan el canon en la skill.
+- Contraste AA: se mide con un script de Playwright que aún no está en el repo (Las cabañas se midió en
+  la carpeta temporal de la sesión: todo 5,35:1 o más).
+- `design-reviewer`: creado pero sin probar en una sección real (no estaba registrado en la sesión de la
+  ronda 1 de Las cabañas; esa crítica la hizo el agente principal con su procedimiento).

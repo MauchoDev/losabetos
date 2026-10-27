@@ -1,0 +1,147 @@
+---
+import { es } from '../../content/es';
+
+const { cabins, booking } = es;
+const { panel } = cabins;
+// TODO: las URL de Airbnb y Booking están en null (es.ts). Hasta tenerlas, el texto se ve pero no enlaza.
+const links = [
+	{ label: booking.airbnbLabel, url: booking.airbnbUrl },
+	{ label: booking.bookingLabel, url: booking.bookingUrl },
+];
+const price =
+	booking.priceFromCLP === null
+		? null
+		: new Intl.NumberFormat(es.site.locale, {
+				style: 'currency',
+				currency: 'CLP',
+				currencyDisplay: 'narrowSymbol',
+				maximumFractionDigits: 0,
+			}).format(booking.priceFromCLP);
+const nights = booking.minStayNights;
+const nightsUnit = nights === 1 ? panel.minStay.one : panel.minStay.other;
+---
+
+<aside class="panel" aria-label={panel.label}>
+	{
+		price && (
+			<div class="price">
+				<p class="from">{panel.priceFrom}</p>
+				<p class="amount">
+					<span class="number">{price}</span> <span class="unit">{panel.priceUnit}</span>
+				</p>
+				<p class="season">{panel.season}</p>
+			</div>
+		)
+	}
+
+	<ul class="facts">
+		<li>{panel.capacity}</li>
+		{nights !== null && <li>{`${panel.minStay.label}: ${nights} ${nightsUnit}`}</li>}
+	</ul>
+
+	<div class="actions">
+		<a class="cta" href="#reservar">{booking.primaryCta}</a>
+		<p class="alt">
+			{
+				links.map((l) => (
+					<a href={l.url ?? undefined} target={l.url ? '_blank' : undefined} rel={l.url ? 'noopener' : undefined}>
+						{l.label}
+					</a>
+				))
+			}
+		</p>
+	</div>
+</aside>
+
+<style>
+	.panel {
+		display: grid;
+		gap: var(--space-8);
+		padding: var(--space-8);
+		border-radius: var(--radius-photo);
+		background: var(--bg-panel);
+		color: var(--text);
+	}
+
+	.price {
+		display: grid;
+		gap: var(--space-2);
+	}
+
+	.from,
+	.season {
+		font-size: var(--text-sm);
+		color: var(--text-muted);
+	}
+
+	.amount {
+		color: var(--text);
+	}
+
+	.number {
+		font-family: var(--font-display);
+		font-weight: var(--weight-display);
+		font-size: var(--text-xl);
+		line-height: var(--leading-display);
+		/* Cormorant trae cifras de estilo antiguo por defecto: el 1 parece una «ı» */
+		font-variant-numeric: lining-nums;
+	}
+
+	.unit {
+		font-size: var(--text-sm);
+	}
+
+	.facts {
+		display: grid;
+		gap: var(--space-4);
+		margin: 0;
+		padding: var(--space-4) 0 0;
+		border-top: var(--border-width) solid var(--line-on-light);
+		list-style: none;
+		font-size: var(--text-sm);
+		line-height: var(--leading-snug);
+	}
+
+	.actions {
+		display: grid;
+		justify-items: start;
+		gap: var(--space-4);
+	}
+
+	.cta {
+		display: inline-flex;
+		align-items: center;
+		min-height: var(--control-lg);
+		padding-inline: var(--space-8);
+		border-radius: var(--radius-pill);
+		background: var(--cta-bg);
+		color: var(--cta-text);
+		font-weight: var(--weight-strong);
+		text-decoration: none;
+	}
+
+	.cta:hover {
+		background: var(--cta-bg-hover);
+	}
+
+	.alt {
+		display: flex;
+		gap: var(--space-6);
+		font-size: var(--text-sm);
+	}
+
+	.alt a {
+		display: inline-flex;
+		align-items: center;
+		min-height: var(--tap-min);
+		color: var(--text);
+		text-decoration: underline;
+		text-underline-offset: var(--underline-offset);
+	}
+
+	@media (min-width: 64rem) {
+		.panel {
+			padding: var(--space-12);
+		}
+	}
+</style>
