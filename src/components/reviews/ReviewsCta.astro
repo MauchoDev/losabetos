@@ -1,0 +1,111 @@
+---
+// TEMPORAL (brief v3): botón final en dos versiones, que se eligen con ?cta=a o ?cta=b. Sin parámetro se ve la A.
+// Al elegir una, se borra la otra (su <a>, su CSS y este script) y se retira el parámetro `?cta`.
+// Las dos llevan booking.primaryCta. Son locales a Reseñas: ui/Button.astro lo usa la sección 2 y no se toca.
+import { es } from '../../content/es';
+import arrowRight from '../../assets/icons/arrow-right.svg?raw';
+
+const { primaryCta } = es.booking;
+const arrow = arrowRight.replace(/class="[^"]*"/, 'class="arrow" aria-hidden="true" focusable="false"');
+---
+
+<div class="cta" data-reviews-cta data-version="a">
+	<a class="a" href="#reservar">{primaryCta}</a>
+	<a class="b" href="#reservar">
+		<span class="label">{primaryCta}</span>
+		<Fragment set:html={arrow} />
+	</a>
+</div>
+
+<script is:inline>
+	// Síncrono, para que la versión elegida esté puesta antes del primer pintado
+	(function () {
+		var version = (new URLSearchParams(window.location.search).get('cta') || '').toLowerCase();
+		var el = document.querySelector('[data-reviews-cta]');
+		if (el && version === 'b') el.setAttribute('data-version', 'b');
+	})();
+</script>
+
+<style>
+	.cta[data-version='a'] .b,
+	.cta[data-version='b'] .a {
+		display: none;
+	}
+
+	/* A: ámbar relleno, más discreto que el botón principal. Texto en pino; hover: el fondo se oscurece. */
+	.a {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: var(--tap-min);
+		padding: var(--cta-compact-pad-y) var(--cta-compact-pad-x);
+		border-radius: var(--radius-square);
+		background: var(--cta-bg);
+		color: var(--cta-text);
+		font-size: var(--text-xs);
+		font-weight: var(--weight-strong);
+		line-height: var(--leading-snug);
+		letter-spacing: var(--tracking-caps);
+		text-align: center;
+		text-decoration: none;
+		text-transform: uppercase;
+		transition: background var(--duration-fast) var(--ease-out);
+	}
+
+	.a:hover {
+		background: var(--cta-bg-hover);
+	}
+
+	/* B: enlace en ámbar, igual que «VER TODAS EN AIRBNB →» (mayúsculas pequeñas, subrayado de 1 px a 8 px y flecha fina) */
+	.b {
+		display: inline-block;
+		padding-block: var(--space-4);
+		color: var(--cta-bg);
+		font-size: var(--text-xs);
+		line-height: var(--leading-snug);
+		letter-spacing: var(--tracking-caps);
+		text-decoration: none;
+		text-transform: uppercase;
+	}
+
+	.label {
+		text-decoration: underline;
+		text-decoration-thickness: var(--border-width);
+		text-underline-offset: var(--space-2);
+	}
+
+	.b :global(.arrow) {
+		width: var(--icon-size-sm);
+		height: var(--icon-size-sm);
+		margin-inline-start: var(--space-3);
+		vertical-align: middle;
+		stroke-width: var(--stroke-lucide);
+		stroke-linecap: square;
+		stroke-linejoin: miter;
+	}
+
+	/* Hover: la flecha se corre 4 px; con prefers-reduced-motion: reduce no se mueve y el subrayado se engrosa */
+	@media (prefers-reduced-motion: no-preference) {
+		.b :global(.arrow) {
+			transition: transform var(--duration-fast) var(--ease-out);
+		}
+
+		.b:hover :global(.arrow) {
+			transform: translateX(var(--arrow-nudge));
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.b:hover .label {
+			text-decoration-thickness: calc(var(--border-width) * 2);
+		}
+	}
+
+	/* Móvil: el botón A ocupa todo el ancho; desde tablet, su ancho natural */
+	@media (min-width: 48rem) {
+		.cta {
+			display: flex;
+			justify-content: start;
+		}
+	}
+</style>

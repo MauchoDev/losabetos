@@ -145,6 +145,63 @@ export const es = {
 			next: 'Foto siguiente',
 		},
 	},
+	// Sección 3, «Reseñas» (resenas-brief.md, versión 3). Las reseñas se escriben a mano, sin widget de terceros. Los textos
+	// van EXACTOS: solo se cortan al final de una oración. Cada tarjeta muestra 5 estrellas, el texto y, en el pie, el nombre
+	// de pila con procedencia y fecha; sin avatares ni fotos de perfil. Cuando lleguen reseñas nuevas se agregan aquí.
+	reviews: {
+		// Mayúsculas por CSS, con el mismo estilo y tamaño del titular de Lo que destaca (el diagrama del brief las dibuja así).
+		title: 'Lo que dicen sus huéspedes',
+		// Enlace a la derecha del titular: va a booking.airbnbUrl
+		linkLabel: 'Ver todas en Airbnb',
+		// TODO: promedio que muestra el anuncio de Airbnb. Con null no se muestra nada de eso.
+		// Sin render todavía (modo layout): cuando llegue el dato, se agrega la línea bajo el enlace (ver BACKLOG.md).
+		rating: null as number | null,
+		// TODO: número de reseñas del anuncio. Con null no se muestra nada de eso. Sin render todavía, igual que `rating`.
+		count: null as number | null,
+		// Nombre accesible de la fila de estrellas; {stars} se reemplaza por items[].stars
+		starsLabel: '{stars} de 5 estrellas',
+		// `from` es opcional (null = no se muestra, no es un dato pendiente). No se descargan ni enlazan imágenes de Airbnb.
+		// TODO: confirmar con el cliente que se muestren solo nombre de pila, procedencia y mes y año.
+		items: [
+			{
+				name: 'Nicole',
+				from: 'Punta Arenas, Chile' as string | null,
+				date: 'enero de 2025',
+				stars: 5,
+				quote:
+					'Excelente estadía, todo muy limpio, cercano a la ciudad pero al mismo tiempo alejado del ruido',
+			},
+			{
+				name: 'Constanza',
+				from: 'Antofagasta, Chile' as string | null,
+				date: 'noviembre de 2024',
+				stars: 5,
+				quote: 'Lugar hermoso e impecable. Cuidaron hasta el último detalle de la cabaña.',
+			},
+			{
+				name: 'Ricardo',
+				from: 'Chillán, Chile' as string | null,
+				date: 'febrero de 2024',
+				stars: 5,
+				quote: 'El lugar muy tranquilo y privado. La cabaña impecable, todo limpio, ordenado y espacioso.',
+			},
+			{
+				// Figuraba dos veces en la primera versión: son oraciones contiguas de la misma reseña, se unen en una cita.
+				name: 'Laura',
+				from: null as string | null,
+				date: 'septiembre de 2025',
+				stars: 5,
+				quote: 'La cabaña preciosa, limpia, con detalles muy cuidados y todo lo necesario para una estadía cómoda.',
+			},
+			{
+				name: 'Analia',
+				from: 'Bella Vista, Argentina' as string | null,
+				date: 'febrero de 2025',
+				stars: 5,
+				quote: 'Hermoso alojamiento y la atención. Y la amabilidad de Romina impecable.',
+			},
+		],
+	},
 	booking: {
 		primaryCta: 'Consultar disponibilidad',
 		airbnbLabel: 'Airbnb',

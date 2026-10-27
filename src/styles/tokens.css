@@ -32,6 +32,9 @@
 	--text-muted: var(--color-pino-600);
 	--text-on-dark: var(--color-niebla-50);
 	--text-on-dark-muted: var(--color-niebla-200);
+	/* Tarjetas de reseñas (brief v2): texto de la reseña (niebla al 90 %) y procedencia y fecha (niebla al 60 %) */
+	--text-on-dark-body: rgb(246 248 249 / 0.9);
+	--text-on-dark-faint: rgb(246 248 249 / 0.6);
 	--border: var(--color-niebla-200);
 	--line-on-dark: rgb(246 248 249 / 0.35);
 	/* Par de --line-on-dark para secciones claras y para la ficha (salvia). --border es muy tenue sobre niebla. */
@@ -158,6 +161,22 @@
 	   tarjeta no se mueve. */
 	--shadow-card: 0 1px 2px rgb(20 40 31 / 0.06), 0 14px 32px -16px rgb(20 40 31 / 0.22);
 	--shadow-card-hover: 0 2px 4px rgb(20 40 31 / 0.08), 0 20px 40px -16px rgb(20 40 31 / 0.28);
+
+	/* Reseñas (brief v2): tarjeta sobre fondo oscuro. Se separa del lienzo por un tono apenas más claro, un borde fino y
+	   un reflejo en el borde superior (radio 0, como todo fuera del hero). Sombra permitida solo en tarjetas. */
+	--surface-on-dark: rgb(237 241 238 / 0.05);
+	--border-on-dark: var(--border-width) solid rgb(237 241 238 / 0.1);
+	--shadow-card-dark: inset 0 1px 0 rgb(237 241 238 / 0.08), 0 16px 32px -20px rgb(0 0 0 / 0.55);
+	/* Estrellas (Lucide star, 14 px, ámbar del hero, 2 px entre ellas) */
+	--rating-star: var(--color-ambar-400);
+	--star-size: 0.875rem;
+	--star-gap: 0.125rem;
+	/* Brief v3: línea fina sobre el pie de la tarjeta (nombre, procedencia y fecha) y ancho máximo de línea del texto (52 caracteres) */
+	--line-card-dark: rgb(237 241 238 / 0.08);
+	--measure-review: 52ch;
+	/* Brief v3, botón final A (más discreto que el botón principal): relleno de 14 px por 26 px */
+	--cta-compact-pad-y: 0.875rem;
+	--cta-compact-pad-x: 1.625rem;
 
 	/* Movimiento */
 	--duration-fast: 150ms;

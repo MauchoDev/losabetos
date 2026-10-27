@@ -1,0 +1,35 @@
+---
+// Sección 3, «Reseñas» (tono oscuro). Brief: resenas-brief.md (versión 3, última). Modo layout: estructura, contenido
+// real y tokens; el pulido de espaciados y tamaños va en la pasada general (BACKLOG.md).
+import ReviewsHead from './reviews/ReviewsHead.astro';
+import ReviewsCards from './reviews/ReviewsCards.astro';
+import ReviewsCta from './reviews/ReviewsCta.astro';
+---
+
+<section class="reviews section" id="resenas" aria-labelledby="resenas-titulo">
+	<div class="container">
+		<ReviewsHead />
+		<div class="list"><ReviewsCards /></div>
+		<div class="foot"><ReviewsCta /></div>
+	</div>
+</section>
+
+<style>
+	.reviews {
+		background: var(--bg-dark);
+		color: var(--text-on-dark);
+	}
+
+	/* Línea fina entre el encabezado y las tarjetas, y otra antes del botón (el diagrama del brief) */
+	.list {
+		margin-top: var(--space-8);
+		padding-top: var(--space-12);
+		border-top: var(--border-width) solid var(--line-on-dark);
+	}
+
+	.foot {
+		margin-top: var(--space-12);
+		padding-top: var(--space-12);
+		border-top: var(--border-width) solid var(--line-on-dark);
+	}
+</style>

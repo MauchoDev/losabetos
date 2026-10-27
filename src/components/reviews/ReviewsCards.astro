@@ -1,0 +1,144 @@
+---
+import { es } from '../../content/es';
+import star from '../../assets/icons/star.svg?raw';
+
+const { items, starsLabel } = es.reviews;
+// Lucide star, relleno de ámbar: el CSS pisa los atributos del SVG original (trazo 2, round)
+const starSvg = star.replace(/class="[^"]*"/, 'class="star" aria-hidden="true" focusable="false"');
+---
+
+<ul class="cards">
+	{
+		items.map((item) => (
+			<li class="card">
+				<div class="stars" role="img" aria-label={starsLabel.replace('{stars}', String(item.stars))}>
+					{Array.from({ length: item.stars }, () => <Fragment set:html={starSvg} />)}
+				</div>
+				<p class="text">{item.quote}</p>
+				<div class="who">
+					<span class="name">{item.name}</span>
+					<span class="meta">
+						{item.from && <span class="from">{item.from}</span>}
+						<span class="date">{item.date}</span>
+					</span>
+				</div>
+			</li>
+		))
+	}
+</ul>
+
+<style>
+	/* minmax(0, 1fr): sin esto la columna crece hasta el ancho mínimo del pie y a 320 px la página se desborda */
+	.cards {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: var(--space-6);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	/* Tarjeta pequeña de formas rectas: un tono apenas más claro que el fondo, borde fino y reflejo arriba */
+	.card {
+		display: flex;
+		flex-direction: column;
+		padding: var(--space-6);
+		background: var(--surface-on-dark);
+		border: var(--border-on-dark);
+		border-radius: var(--radius-square);
+		box-shadow: var(--shadow-card-dark);
+	}
+
+	.stars {
+		display: flex;
+		gap: var(--star-gap);
+		margin-bottom: var(--space-4);
+		color: var(--rating-star);
+	}
+
+	.stars :global(.star) {
+		width: var(--star-size);
+		height: var(--star-size);
+		fill: currentColor;
+		stroke: none;
+	}
+
+	.text {
+		max-width: var(--measure-review);
+		margin-bottom: var(--space-6);
+		color: var(--text-on-dark-body);
+		line-height: var(--leading-body);
+		text-wrap: pretty;
+	}
+
+	/* Pie anclado al fondo de la tarjeta: los nombres quedan alineados en cada fila aunque los textos midan distinto */
+	.who {
+		display: grid;
+		gap: var(--space-1);
+		margin-top: auto;
+		padding-top: var(--space-4);
+		border-top: var(--border-width) solid var(--line-card-dark);
+	}
+
+	.name {
+		font-size: var(--text-sm);
+		line-height: var(--leading-snug);
+		color: var(--text-on-dark);
+	}
+
+	/* Procedencia y fecha en una línea; si no caben, la fecha baja entera. El punto medio cuelga a la izquierda de la fecha
+	   y el overflow lo recorta cuando la fecha pasa a la línea de abajo: nunca queda un punto colgado. */
+	.meta {
+		display: flex;
+		flex-wrap: wrap;
+		column-gap: var(--space-4);
+		overflow: hidden;
+		font-size: var(--text-xs);
+		line-height: var(--leading-snug);
+		color: var(--text-on-dark-faint);
+	}
+
+	.from,
+	.date {
+		white-space: nowrap;
+	}
+
+	.date {
+		position: relative;
+	}
+
+	/* El punto queda centrado en el espacio entre procedencia y fecha. Texto alternativo vacío: no se lee en voz alta. */
+	.from + .date::before {
+		content: '\00b7';
+		content: '\00b7' / '';
+		position: absolute;
+		inset-inline-start: calc(var(--space-2) * -1);
+		transform: translateX(-50%);
+	}
+
+	/* Tablet: dos columnas (con tres, el texto pasa de 4 líneas); la quinta ocupa el ancho */
+	@media (min-width: 48rem) {
+		.cards {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.card:last-child {
+			grid-column: 1 / -1;
+		}
+	}
+
+	/* Escritorio: cuadrícula de 6 columnas, 3 tarjetas arriba (2 columnas cada una) y 2 abajo (3 columnas cada una) */
+	@media (min-width: 76rem) {
+		.cards {
+			grid-template-columns: repeat(6, minmax(0, 1fr));
+		}
+
+		.card {
+			grid-column: span 2;
+		}
+
+		.card:nth-child(n + 4) {
+			grid-column: span 3;
+		}
+	}
+</style>

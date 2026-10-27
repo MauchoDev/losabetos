@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import Highlights from '../components/Highlights.astro';
+import Reviews from '../components/Reviews.astro';
 import { es } from '../content/es';
 ---
 
@@ -9,7 +10,7 @@ import { es } from '../content/es';
 	<main>
 		<Hero />
 		<Highlights />
-		<section id="resenas" class="section" aria-label={es.sections.reviews}></section>
+		<Reviews />
 		<section id="zona" class="section" aria-label={es.sections.zone}></section>
 		<section id="reservar" class="section" aria-label={es.sections.contact}></section>
 	</main>
