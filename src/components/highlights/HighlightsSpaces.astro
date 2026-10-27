@@ -1,0 +1,202 @@
+---
+import { Picture } from 'astro:assets';
+import { es } from '../../content/es';
+import { sources } from './photos';
+
+const { spaces, viewPhotos, viewPhotosOf, photoNote } = es.highlights;
+
+// Hanken Grotesk no trae el guion no separable (U+2011): el navegador lo dibujaría con otra fuente. Para que una palabra
+// con guion («futón-cama») no se parta en dos renglones, se envuelve en un `nowrap`. Los textos salen de es.ts (datos
+// nuestros), y aun así se escapan los caracteres de HTML.
+const escapeHtml = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const keepHyphenated = (t: string) =>
+	escapeHtml(t).replace(/(\p{L}+-\p{L}+)/gu, '<span class="nowrap">$1</span>');
+---
+
+<div class="spaces" id="galeria">
+	<ul class="cards">
+		{
+			spaces.map((space) => {
+				const slot = es.photos[space.photo];
+				return (
+					<li class="card">
+						<div class="photo">
+							<Picture
+								src={sources[space.photo]}
+								alt={slot.alt}
+								width={slot.width}
+								height={slot.height}
+								formats={['avif', 'webp']}
+								widths={[480, 960, slot.width]}
+								sizes="(min-width: 76rem) 22rem, (min-width: 48rem) 30vw, 100vw"
+								loading="lazy"
+							/>
+						</div>
+						<div class="body">
+							<h3 class="title">{space.title}</h3>
+							<p class="text" set:html={keepHyphenated(space.text)} />
+							{/* Toda la tarjeta abre la vista ampliada, con un solo punto de foco: este botón */}
+							<button
+								type="button"
+								class="more"
+								aria-haspopup="dialog"
+								aria-label={viewPhotosOf.replace('{title}', space.title)}
+								data-viewer-open={space.photo}
+							>
+								{viewPhotos}
+							</button>
+						</div>
+					</li>
+				);
+			})
+		}
+	</ul>
+
+	<p class="note">{photoNote}</p>
+</div>
+
+<style>
+	/* Al llegar desde «Ver cabañas» o el nav, las tarjetas no quedan pegadas al borde de la ventana */
+	.spaces {
+		scroll-margin-top: var(--space-12);
+	}
+
+	/* Una columna: cada foto con el ancho máximo que su archivo aguanta también en pantallas x2 */
+	.cards {
+		display: grid;
+		gap: var(--space-8);
+		max-width: var(--photo-max-width);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	/* Tarjeta con elevación discreta (única excepción a «sin sombras» fuera del hero): radio 0, fondo --bg-raised,
+	   borde de 1 px y --shadow-card, con 16 px de relleno alrededor de la foto, como una copia montada. Las tres miden
+	   lo mismo (la rejilla las estira) y toda la tarjeta abre la vista ampliada. Hover: solo cambia la sombra; la
+	   tarjeta no se mueve. */
+	.card {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		padding: var(--space-4);
+		border: var(--border-width) solid var(--line-card);
+		border-radius: var(--radius-square);
+		background: var(--bg-raised);
+		box-shadow: var(--shadow-card);
+		transition: box-shadow var(--duration-fast) var(--ease-out);
+	}
+
+	.card:hover {
+		box-shadow: var(--shadow-card-hover);
+	}
+
+	/* Las tres fotos miden lo mismo aunque cambie el archivo: se recortan, no se estiran */
+	.photo {
+		width: 100%;
+		aspect-ratio: var(--ratio-card-photo);
+		overflow: hidden;
+		border-radius: var(--radius-square);
+		background: var(--bg-alt);
+	}
+
+	.photo :global(img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		filter: var(--photo-hero-filter);
+	}
+
+	/* El texto va debajo de la foto, dentro de la misma tarjeta, y arranca en el mismo borde que la foto (sin relleno
+	   lateral propio: el marco de la tarjeta ya lo da) */
+	.body {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--space-3);
+		padding: var(--space-6) 0 var(--space-2);
+	}
+
+	.title {
+		font-size: var(--text-xl);
+		color: var(--text);
+	}
+
+	.text {
+		font-size: var(--text-sm);
+		line-height: var(--leading-body);
+		color: var(--text-muted);
+		text-wrap: pretty;
+	}
+
+	.text :global(.nowrap) {
+		white-space: nowrap;
+	}
+
+	/* Enlace de texto de subrayado fino, como los del hero. El ::after lo extiende a toda la tarjeta: el área de clic
+	   es la tarjeta entera (mucho más que --tap-min), por eso el enlace no lleva alto mínimo propio. */
+	.more {
+		display: inline-flex;
+		align-items: center;
+		margin-top: auto;
+		padding: 0;
+		border: 0;
+		background: none;
+		color: var(--text);
+		font: inherit;
+		font-size: var(--text-sm);
+		text-decoration: underline;
+		text-decoration-thickness: var(--border-width);
+		text-underline-offset: var(--underline-offset);
+		cursor: pointer;
+	}
+
+	.more::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+	}
+
+	/* El foco de teclado rodea la tarjeta entera (cuadrado) y no solo el texto */
+	/* Sin :has() (Firefox anterior a 121) el foco se queda en el propio enlace, que ya es visible */
+	@supports selector(:has(*)) {
+		.more:focus-visible {
+			outline: none;
+		}
+
+		.card:has(.more:focus-visible) {
+			outline: var(--focus-width) solid var(--focus-ring);
+			outline-offset: var(--focus-offset);
+		}
+	}
+
+	.note {
+		margin-top: var(--space-6);
+		font-size: var(--text-xs);
+		line-height: var(--leading-snug);
+		color: var(--text-muted);
+	}
+
+	/* Tablet: las 3 tarjetas en fila miden ~212 px; el título baja un paso para que «Cocina y comedor» no se parta */
+	@media (min-width: 48rem) {
+		.cards {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			max-width: none;
+		}
+
+		.title {
+			font-size: var(--text-lg);
+		}
+
+		.note {
+			font-size: var(--text-sm);
+		}
+	}
+
+	@media (min-width: 76rem) {
+		.title {
+			font-size: var(--text-xl);
+		}
+	}
+</style>

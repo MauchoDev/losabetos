@@ -1,8 +1,11 @@
 ---
+// Ficha de precio y consulta. Salió de «Lo que destaca» (DESTACADOS-BRIEF.md) y queda guardada, SIN USAR, para la
+// sección 5 (Reservar), donde va antes del formulario. Formas rectas. Su texto vive en es.booking.panel.
 import { es } from '../../content/es';
+import Button from '../ui/Button.astro';
 
-const { cabins, booking } = es;
-const { panel } = cabins;
+const { booking } = es;
+const { panel } = booking;
 // TODO: las URL de Airbnb y Booking están en null (es.ts). Hasta tenerlas, el texto se ve pero no enlaza.
 const links = [
 	{ label: booking.airbnbLabel, url: booking.airbnbUrl },
@@ -40,7 +43,7 @@ const nightsUnit = nights === 1 ? panel.minStay.one : panel.minStay.other;
 	</ul>
 
 	<div class="actions">
-		<a class="cta" href="#reservar">{booking.primaryCta}</a>
+		<Button href="#reservar" wide>{booking.primaryCta}</Button>
 		<p class="alt">
 			{
 				links.map((l) => (
@@ -58,7 +61,7 @@ const nightsUnit = nights === 1 ? panel.minStay.one : panel.minStay.other;
 		display: grid;
 		gap: var(--space-8);
 		padding: var(--space-8);
-		border-radius: var(--radius-photo);
+		border-radius: var(--radius-square);
 		background: var(--bg-panel);
 		color: var(--text);
 	}
@@ -108,22 +111,6 @@ const nightsUnit = nights === 1 ? panel.minStay.one : panel.minStay.other;
 		gap: var(--space-4);
 	}
 
-	.cta {
-		display: inline-flex;
-		align-items: center;
-		min-height: var(--control-lg);
-		padding-inline: var(--space-8);
-		border-radius: var(--radius-pill);
-		background: var(--cta-bg);
-		color: var(--cta-text);
-		font-weight: var(--weight-strong);
-		text-decoration: none;
-	}
-
-	.cta:hover {
-		background: var(--cta-bg-hover);
-	}
-
 	.alt {
 		display: flex;
 		gap: var(--space-6);
@@ -136,10 +123,11 @@ const nightsUnit = nights === 1 ? panel.minStay.one : panel.minStay.other;
 		min-height: var(--tap-min);
 		color: var(--text);
 		text-decoration: underline;
+		text-decoration-thickness: var(--border-width);
 		text-underline-offset: var(--underline-offset);
 	}
 
-	@media (min-width: 64rem) {
+	@media (min-width: 48rem) {
 		.panel {
 			padding: var(--space-12);
 		}

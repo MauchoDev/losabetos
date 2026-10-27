@@ -1,0 +1,110 @@
+---
+import '@fontsource/cormorant-garamond/latin-300.css';
+import { es } from '../../content/es';
+import arrowRight from '../../assets/icons/arrow-right.svg?raw';
+
+// La intro (es.highlights.intro) ya no se muestra aquí: el enlace «Ver cabañas» ocupa su lugar a la derecha.
+const { title, viewCabins } = es.highlights;
+---
+
+<header class="head">
+	<h2 id="destacados-titulo" class="title">{title}</h2>
+	<a class="link" href="#galeria">
+		<span class="label">{viewCabins}</span>
+		<Fragment set:html={arrowRight.replace(/class="[^"]*"/, 'class="arrow" aria-hidden="true" focusable="false"')} />
+	</a>
+</header>
+
+<style>
+	/* Familia, peso, interlínea y tracking vienen de global.css (h1–h3), igual que el titular del hero */
+	.title {
+		font-size: var(--step-section);
+		text-transform: uppercase;
+		text-wrap: balance;
+		color: var(--text);
+	}
+
+	.head {
+		display: grid;
+		gap: var(--space-2);
+	}
+
+	/* Enlace de texto como los del nav del hero (--text-xs, mayúsculas, --tracking-caps). Es un bloque en línea: su
+	   base de texto es la de la última línea, y es la que se alinea con la base del titular. El subrayado va solo
+	   bajo el texto; la flecha SVG viene después. */
+	.link {
+		display: inline-block;
+		justify-self: start;
+		padding-block: var(--space-4);
+		color: var(--text);
+		font-size: var(--text-xs);
+		line-height: var(--leading-snug);
+		letter-spacing: var(--tracking-caps);
+		text-transform: uppercase;
+		text-decoration: none;
+	}
+
+	.label {
+		text-decoration: underline;
+		text-decoration-thickness: var(--border-width);
+		text-underline-offset: var(--space-2);
+	}
+
+	.link :global(.arrow) {
+		width: var(--icon-size-sm);
+		height: var(--icon-size-sm);
+		margin-inline-start: var(--space-3);
+		/* El trazo de Lucide deja ~4 px vacíos a la derecha del SVG (la flecha llega a x = 19 de 24): se compensan para que
+		   la punta quede en el borde del contenedor, sobre la misma línea que la regla fina de abajo */
+		margin-inline-end: calc(var(--icon-size-sm) * -0.2);
+		vertical-align: middle;
+		stroke-width: var(--stroke-lucide);
+		stroke-linecap: square;
+		stroke-linejoin: miter;
+	}
+
+	/* Al pasar el cursor la flecha se corre 4 px; con prefers-reduced-motion: reduce no se mueve */
+	@media (prefers-reduced-motion: no-preference) {
+		.link :global(.arrow) {
+			transition: transform var(--duration-fast) var(--ease-out);
+		}
+
+		.link:hover :global(.arrow) {
+			transform: translateX(var(--arrow-nudge));
+		}
+	}
+
+	/* Con movimiento reducido la flecha no se mueve: el aviso de hover es el subrayado, que se engrosa (sin movimiento) */
+	@media (prefers-reduced-motion: reduce) {
+		.link:hover .label {
+			text-decoration-thickness: calc(var(--border-width) * 2);
+		}
+	}
+
+	@media (min-width: 48rem) {
+		.head {
+			grid-template-columns: repeat(12, minmax(0, 1fr));
+			column-gap: var(--space-8);
+			/* Respaldo si el navegador no entiende `last baseline`: alinea las cajas por abajo */
+			align-items: end;
+			/* Alinea la base del enlace con la de la última línea del titular, no las cajas */
+			align-items: last baseline;
+		}
+
+		/* En tablet el titular ocupa 8 columnas para caber en 2 líneas (con 6 se partía en 3) */
+		.title {
+			grid-column: 1 / span 8;
+		}
+
+		.link {
+			grid-column: 9 / span 4;
+			justify-self: end;
+		}
+	}
+
+	@media (min-width: 76rem) {
+		.title {
+			grid-column: 1 / span 6;
+		}
+	}
+</style>

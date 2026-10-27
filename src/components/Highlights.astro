@@ -1,0 +1,41 @@
+---
+// Sección 2, «Lo que destaca» (tono claro). Brief: DESTACADOS-BRIEF.md, que reemplaza a cabanas.md.
+// Ids para el nav del hero: #cabanas (inicio de la sección) y #galeria (bloque de espacios con fotos).
+import HighlightsHead from './highlights/HighlightsHead.astro';
+import HighlightsPoints from './highlights/HighlightsPoints.astro';
+import HighlightsSpaces from './highlights/HighlightsSpaces.astro';
+import HighlightsAlso from './highlights/HighlightsAlso.astro';
+import HighlightsViewer from './highlights/HighlightsViewer.astro';
+---
+
+<section class="highlights section" id="cabanas" aria-labelledby="destacados-titulo">
+	<div class="container">
+		<HighlightsHead />
+		<div class="points"><HighlightsPoints /></div>
+		<div class="spaces"><HighlightsSpaces /></div>
+		<div class="also"><HighlightsAlso /></div>
+	</div>
+
+	<HighlightsViewer />
+</section>
+
+<style>
+	/* Fondo un paso más oscuro que --bg (niebla-100): sobre niebla-50 la tarjeta blanca casi no se distinguía del
+	   lienzo (1,07:1); así sube a 1,16:1 sin más sombra. */
+	.highlights {
+		background: var(--bg-alt);
+		color: var(--text);
+	}
+
+	.points {
+		margin-top: var(--space-12);
+	}
+
+	.spaces {
+		margin-top: var(--space-16);
+	}
+
+	.also {
+		margin-top: var(--space-16);
+	}
+</style>

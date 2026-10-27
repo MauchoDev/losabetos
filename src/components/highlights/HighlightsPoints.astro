@@ -1,0 +1,121 @@
+---
+import { es } from '../../content/es';
+// SVG de Lucide copiados tal cual (ISC, ver src/assets/icons/LICENSE-lucide.txt); sin instalar la librería.
+import treePine from '../../assets/icons/tree-pine.svg?raw';
+import mapPin from '../../assets/icons/map-pin.svg?raw';
+import bedDouble from '../../assets/icons/bed-double.svg?raw';
+import cookingPot from '../../assets/icons/cooking-pot.svg?raw';
+
+const { points } = es.highlights;
+const icons = { treePine, mapPin, bedDouble, cookingPot };
+---
+
+<ul class="points">
+	{
+		points.map((point) => (
+			<li>
+				<span class="icon" aria-hidden="true">
+					<Fragment set:html={icons[point.icon]} />
+				</span>
+				<h3 class="title">{point.title}</h3>
+				<p class="text">{point.text}</p>
+			</li>
+		))
+	}
+</ul>
+
+<style>
+	/* Sin tarjetas ni líneas verticales: cada punto va centrado en su propio eje (ícono, título en serif y una
+	   línea). Quedan las líneas finas de arriba y de abajo de la fila y, en móvil y tablet, las horizontales entre
+	   filas. Cada ancho define sus líneas por completo: `li + li` pesa más que `li:nth-child(n + 3)`, por eso las
+	   reglas de tablet y escritorio usan `li + li:nth-child(…)`. */
+	.points {
+		display: grid;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		border-block: var(--border-width) solid var(--line-on-light);
+	}
+
+	li {
+		display: grid;
+		justify-items: center;
+		align-content: start;
+		gap: var(--space-2);
+		padding-block: var(--space-6);
+		text-align: center;
+	}
+
+	/* Móvil: una columna, línea horizontal entre puntos */
+	li + li {
+		border-top: var(--border-width) solid var(--line-on-light);
+	}
+
+	/* Ícono de Lucide a 30 px, trazo fino y esquinas rectas, en pino. Los atributos del SVG original
+	   (stroke-width 2, round) los pisan estas reglas. */
+	.icon {
+		display: block;
+		margin-bottom: var(--space-3);
+		color: var(--text);
+		line-height: 0;
+	}
+
+	.icon :global(svg) {
+		width: var(--icon-size-lg);
+		height: var(--icon-size-lg);
+		stroke-width: var(--stroke-lucide);
+		stroke-linecap: square;
+		stroke-linejoin: miter;
+	}
+
+	/* Cormorant 300 pesa poco: en una y en dos columnas el título va un paso más grande que en la fila de 4 */
+	.title {
+		font-size: var(--text-xl);
+		color: var(--text);
+		/* Cormorant trae cifras de estilo antiguo por defecto: el 1 de «10 minutos» parece una «ı» */
+		font-variant-numeric: lining-nums;
+		text-wrap: balance;
+	}
+
+	.text {
+		font-size: var(--text-sm);
+		line-height: var(--leading-body);
+		color: var(--text-muted);
+	}
+
+	/* Tablet: 2 × 2, línea horizontal solo entre filas */
+	@media (min-width: 48rem) {
+		.points {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		li {
+			padding-block: var(--space-8);
+		}
+
+		li + li {
+			border-top: 0;
+		}
+
+		li + li:nth-child(n + 3) {
+			border-top: var(--border-width) solid var(--line-on-light);
+		}
+	}
+
+	/* Escritorio: los 4 puntos en una fila, sin ninguna línea entre ellos (desde 76rem = --container) */
+	@media (min-width: 76rem) {
+		.points {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			column-gap: var(--space-8);
+		}
+
+		li + li,
+		li + li:nth-child(n + 3) {
+			border-top: 0;
+		}
+
+		.title {
+			font-size: var(--text-lg);
+		}
+	}
+</style>

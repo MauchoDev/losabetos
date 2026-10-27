@@ -1,13 +1,35 @@
 ---
 import { es } from '../../content/es';
+import { viewerOrder, viewerSrc } from './photos';
+import arrowLeft from '../../assets/icons/arrow-left.svg?raw';
+import arrowRight from '../../assets/icons/arrow-right.svg?raw';
 
-const { viewer } = es.cabins;
+const { viewer } = es.highlights;
+// Flechas de Lucide copiadas a src/assets/icons (ver LICENSE-lucide.txt); el CSS les pone trazo fino y esquinas rectas
+const decorative = (svg: string) => svg.replace(/class="[^"]*"/, 'aria-hidden="true" focusable="false"');
+// Las 5 fotos, también las que no tienen tarjeta. Cada disparador (`data-viewer-open="clave"`) abre la suya.
+const items = await Promise.all(
+	viewerOrder.map(async (key) => ({ key, slot: es.photos[key], full: await viewerSrc(key) })),
+);
 ---
 
 <dialog class="viewer" aria-label={viewer.label} data-viewer>
-	<button type="button" class="ctrl close" aria-label={viewer.close} data-viewer-close>
-		<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"></path></svg>
-	</button>
+	<ul hidden>
+		{
+			items.map(({ key, slot, full }) => (
+				<li
+					data-viewer-item={key}
+					data-full={full}
+					data-alt={slot.alt}
+					data-caption={slot.caption}
+					data-width={slot.width}
+					data-height={slot.height}
+				/>
+			))
+		}
+	</ul>
+
+	<button type="button" class="ctrl close" data-viewer-close>{viewer.close}</button>
 
 	<figure class="stage">
 		<img alt="" data-viewer-img />
@@ -15,10 +37,10 @@ const { viewer } = es.cabins;
 	</figure>
 
 	<button type="button" class="ctrl prev" aria-label={viewer.prev} data-viewer-prev>
-		<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12H4M10.5 5.5 4 12l6.5 6.5"></path></svg>
+		<Fragment set:html={decorative(arrowLeft)} />
 	</button>
 	<button type="button" class="ctrl next" aria-label={viewer.next} data-viewer-next>
-		<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h16M13.5 5.5 20 12l-6.5 6.5"></path></svg>
+		<Fragment set:html={decorative(arrowRight)} />
 	</button>
 </dialog>
 
@@ -72,16 +94,17 @@ const { viewer } = es.cabins;
 		margin: 0;
 	}
 
-	/* El tamaño parte de width y height del slot: la foto nunca se muestra más grande que su archivo */
+	/* La foto nunca se muestra por encima de su resolución real: --cap-w y --cap-h son el ancho y el alto del archivo
+	   en px CSS (px del archivo ÷ densidad de píxeles de la pantalla; los pone el script al abrir cada foto) */
 	.stage img {
 		align-self: center;
 		width: auto;
 		height: auto;
-		max-width: 100%;
-		max-height: 100%;
+		max-width: min(100%, var(--cap-w, 100%));
+		max-height: min(100%, var(--cap-h, 100%));
 		min-height: 0;
 		object-fit: contain;
-		border-radius: var(--radius-photo);
+		border-radius: var(--radius-square);
 		filter: var(--photo-hero-filter);
 	}
 
@@ -90,16 +113,17 @@ const { viewer } = es.cabins;
 		color: var(--text-on-dark-muted);
 	}
 
-	/* Botón circular: el mismo del hero (HeroScroll), sin transición en esta sección */
+	/* Controles: de 48 px de alto y bordes rectos de 1 px (no circulares, a diferencia del hero). Las flechas son
+	   cuadradas de 48 px; «Cerrar» es del mismo alto y lleva texto. */
 	.ctrl {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		width: var(--control-lg);
-		height: var(--control-lg);
+		min-width: var(--control-square);
+		height: var(--control-square);
 		padding: 0;
 		border: var(--border-width) solid var(--line-on-dark);
-		border-radius: var(--radius-pill);
+		border-radius: var(--radius-square);
 		background: transparent;
 		color: var(--text-on-dark);
 		cursor: pointer;
@@ -107,21 +131,23 @@ const { viewer } = es.cabins;
 
 	.ctrl:hover {
 		background: var(--text-on-dark);
-		color: var(--cta-text);
+		color: var(--bg-dark);
 	}
 
-	.ctrl svg {
+	.close {
+		padding-inline: var(--space-6);
+		font: inherit;
+		font-size: var(--text-xs);
+		text-transform: uppercase;
+		letter-spacing: var(--tracking-caps);
+	}
+
+	.ctrl :global(svg) {
 		width: var(--space-6);
 		height: var(--space-6);
-		fill: none;
-		stroke: currentColor;
-		stroke-width: var(--stroke-icon);
-		stroke-linecap: round;
-		stroke-linejoin: round;
-	}
-
-	.ctrl svg :global(path) {
-		vector-effect: non-scaling-stroke;
+		stroke-width: var(--stroke-lucide);
+		stroke-linecap: square;
+		stroke-linejoin: miter;
 	}
 
 	@media (min-width: 48rem) {
@@ -149,7 +175,7 @@ const { viewer } = es.cabins;
 	const dialog = document.querySelector<HTMLDialogElement>('[data-viewer]');
 
 	if (dialog) {
-		const items = Array.from(document.querySelectorAll<HTMLElement>('[data-viewer-item]'));
+		const items = Array.from(dialog.querySelectorAll<HTMLElement>('[data-viewer-item]'));
 		const img = dialog.querySelector<HTMLImageElement>('[data-viewer-img]')!;
 		const caption = dialog.querySelector<HTMLElement>('[data-viewer-caption]')!;
 		const close = dialog.querySelector<HTMLButtonElement>('[data-viewer-close]')!;
@@ -159,6 +185,13 @@ const { viewer } = es.cabins;
 		let index = 0;
 		let opener: HTMLElement | null = null;
 
+		// Tope de resolución: píxeles del archivo ÷ píxeles físicos por px CSS (1 en pantalla normal, 2 en retina)
+		const capResolution = () => {
+			const { width, height } = items[index].dataset;
+			img.style.setProperty('--cap-w', `${Number(width) / window.devicePixelRatio}px`);
+			img.style.setProperty('--cap-h', `${Number(height) / window.devicePixelRatio}px`);
+		};
+
 		const show = (i: number) => {
 			index = (i + items.length) % items.length;
 			const { full, alt, caption: text, width, height } = items[index].dataset;
@@ -166,6 +199,7 @@ const { viewer } = es.cabins;
 			img.alt = alt ?? '';
 			img.width = Number(width);
 			img.height = Number(height);
+			capResolution();
 			caption.textContent = text ?? '';
 			// Las vecinas se piden antes para que el cambio no espere la red
 			for (const n of [index - 1, index + 1]) {
@@ -173,12 +207,19 @@ const { viewer } = es.cabins;
 			}
 		};
 
-		items.forEach((item, i) => {
-			item.addEventListener('click', () => {
-				opener = item;
-				show(i);
+		// Cada disparador lleva la clave de su foto; la vista abre en esa foto
+		document.querySelectorAll<HTMLElement>('[data-viewer-open]').forEach((trigger) => {
+			trigger.addEventListener('click', () => {
+				const at = items.findIndex((item) => item.dataset.viewerItem === trigger.dataset.viewerOpen);
+				opener = trigger;
+				show(Math.max(at, 0));
 				dialog.showModal();
 			});
+		});
+
+		// El zoom del navegador cambia la densidad de píxeles: el tope se recalcula con la vista abierta
+		window.addEventListener('resize', () => {
+			if (dialog.open) capResolution();
 		});
 
 		close.addEventListener('click', () => dialog.close());

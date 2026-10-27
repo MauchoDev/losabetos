@@ -12,13 +12,13 @@ export const es = {
 	},
 	sections: {
 		hero: 'Inicio',
-		pillars: 'Por qué Los Abetos',
+		// `cabins` y `gallery` son las etiquetas de los enlaces #cabanas y #galeria del nav del hero (congelado).
+		// Ambos ids viven en la sección «Lo que destaca» (highlights).
 		cabins: 'Las cabañas',
 		gallery: 'Galería',
 		reviews: 'Reseñas',
 		zone: 'La zona',
 		contact: 'Cómo reservar',
-		faq: 'Preguntas frecuentes',
 	},
 	hero: {
 		// Los textos van en minúscula normal; el hero los pone en mayúsculas con CSS (hero-brief.md).
@@ -48,16 +48,16 @@ export const es = {
 			height: 960,
 			use: 'OG image',
 		},
-		// Las cabañas. Los alt describen lo que muestra cada archivo, no el pie de foto.
+		// Lo que destaca. Los alt describen lo que muestra cada archivo, no el pie de foto.
 		living: {
-			// Archivo: src/assets/fotos/living.jpg (1280 × 960)
-			// TODO: esta foto muestra la cocina con isla y banquetas, casi igual a cocina.jpg; no se ve el futón-cama
-			// ni la TV. Falta una foto del living (el pie «Living» sale del brief).
-			alt: 'Cocina y comedor con isla de cuarzo y tres banquetas de metal, vigas de madera a la vista y un mueble bajo con cuadros en la pared',
+			// Archivo: src/assets/fotos/living.jpg (1600 × 1200) = IMG-20260415-WA0026.jpg (el living con el macramé).
+			// Hasta la ronda 1 este archivo era «living cocina.jpg», una foto de la cocina.
+			// TODO: el brief dice «con TV» y la foto no muestra la TV; confirmar el texto de highlights.spaces.
+			alt: 'Living luminoso con futón gris, dos sillones, mesas de centro de madera sobre una alfombra de yute, un macramé en la pared y la cocina al fondo bajo vigas de madera',
 			caption: 'Living',
-			width: 1280,
-			height: 960,
-			use: 'Las cabañas',
+			width: 1600,
+			height: 1200,
+			use: 'Lo que destaca',
 		},
 		dormitorioDosCamas: {
 			// Archivo: src/assets/fotos/dormitorio-dos-camas.jpg (1200 × 1600, vertical)
@@ -65,15 +65,15 @@ export const es = {
 			caption: 'Dormitorio con dos camas',
 			width: 1200,
 			height: 1600,
-			use: 'Las cabañas',
+			use: 'Lo que destaca',
 		},
 		cocina: {
 			// Archivo: src/assets/fotos/cocina.jpg (1280 × 960)
 			alt: 'Cocina con isla y banquetas, horno eléctrico, refrigerador y una ventana con marco de madera',
-			caption: 'Comedor y cocina',
+			caption: 'Cocina y comedor',
 			width: 1280,
 			height: 960,
-			use: 'Las cabañas',
+			use: 'Lo que destaca',
 		},
 		dormitorioMatrimonial: {
 			// Archivo: src/assets/fotos/dormitorio-matrimonial.jpg (1280 × 960)
@@ -82,7 +82,7 @@ export const es = {
 			caption: 'Dormitorio matrimonial',
 			width: 1280,
 			height: 960,
-			use: 'Las cabañas',
+			use: 'Lo que destaca',
 		},
 		bano: {
 			// Archivo: src/assets/fotos/bano.jpg (1280 × 960)
@@ -90,48 +90,59 @@ export const es = {
 			caption: 'Baño',
 			width: 1280,
 			height: 960,
-			use: 'Las cabañas',
+			use: 'Lo que destaca',
 		},
 	},
-	cabins: {
-		title: 'Dos cabañas iguales',
+	highlights: {
+		// Espacio duro (\u00a0) entre «a» y «notar»: el titular no se corta en medio de «vas a notar».
+		title: 'Lo que vas a\u00a0notar al llegar',
+		// Ya no se muestra junto al titular (ronda 2). Se conserva aquí para el SEO (meta description u otro uso).
 		intro:
-			'Cada una tiene dos dormitorios, living con futón-cama, cocina con comedor y baño. Ideales para 4 personas, caben hasta 5.',
+			'Dos cabañas iguales en una parcela entre pinos. Tranquilas, cuidadas al detalle y a pocos minutos de todo.',
+		// Enlace a la derecha del titular: baja a #galeria
+		viewCabins: 'Ver cabañas',
+		// `icon` es la clave del SVG de Lucide copiado en src/assets/icons (ver HighlightsPoints.astro).
+		points: [
+			{ icon: 'treePine', title: 'Entre pinos', text: 'Privacidad y silencio' },
+			{
+				icon: 'mapPin',
+				title: 'A 10\u00a0minutos del centro',
+				// TODO: confirmar los 20 minutos al lago (y los 10 al centro, ver hero) con los anfitriones.
+				text: 'Lago a unos 20\u00a0minutos',
+			},
+			{ icon: 'bedDouble', title: 'Impecables por dentro', text: 'Limpias y bien cuidadas' },
+			{ icon: 'cookingPot', title: 'Con todo para quedarte', text: 'Cocina completa y WiFi rápido' },
+		],
+		// `photo` es la clave del slot en es.photos; el pie y el alt de la foto salen de ahí.
+		spaces: [
+			{ photo: 'living', title: 'Living', text: 'Luminoso, con futón-cama, TV y vigas de madera a la vista.' },
+			{ photo: 'cocina', title: 'Cocina y comedor', text: 'Equipada, con isla y bancos.' },
+			{
+				photo: 'dormitorioMatrimonial',
+				title: 'Dormitorios',
+				text: 'Uno matrimonial y otro con dos camas. Ropa de cama incluida.',
+			},
+		],
+		viewPhotos: 'Ver fotos',
+		// Nombre accesible del enlace de cada tarjeta; {title} se reemplaza por el título del espacio.
+		viewPhotosOf: 'Ver fotos: {title}',
+		viewAllPhotos: 'Ver todas las fotos',
+		alsoTitle: 'Y además',
+		also: [
+			'Terraza',
+			'Parrilla',
+			'Estacionamiento',
+			'Baño con agua caliente',
+			'Ropa de cama incluida',
+			'TV e internet rápido',
+		],
 		// TODO: confirmar con los anfitriones.
 		photoNote: 'Las fotos corresponden a una de las cabañas; la otra es idéntica.',
-		openPhoto: 'Ampliar foto',
 		viewer: {
 			label: 'Fotos de las cabañas',
 			close: 'Cerrar',
 			prev: 'Foto anterior',
 			next: 'Foto siguiente',
-		},
-		stripNav: {
-			label: 'Navegar las fotos',
-			prev: 'Ver fotos anteriores',
-			next: 'Ver más fotos',
-		},
-		includedTitle: 'Qué incluye',
-		included: [
-			{ name: 'Cocina equipada', detail: 'Cocina completa con comedor.' },
-			{ name: 'Dos dormitorios', detail: 'Uno matrimonial y otro con dos camas.' },
-			{ name: 'Living con futón-cama', detail: 'Con TV.' },
-			{ name: 'Baño con agua caliente' },
-			{ name: 'Internet rápido y WiFi' },
-			{ name: 'Ropa de cama incluida' },
-			{ name: 'Terraza' },
-			{ name: 'Parrilla' },
-			{ name: 'Estacionamiento' },
-			{ name: 'Entre pinos', detail: 'Árboles grandes alrededor y un patio tranquilo.' },
-		],
-		panel: {
-			label: 'Precio y consulta',
-			priceFrom: 'Desde',
-			priceUnit: 'CLP por noche',
-			// TODO: confirmar con los anfitriones si el precio es por cabaña.
-			season: 'Temporada alta',
-			capacity: 'Ideales para 4, hasta 5 personas',
-			minStay: { label: 'Estadía mínima', one: 'noche', other: 'noches' },
 		},
 	},
 	booking: {
@@ -143,5 +154,15 @@ export const es = {
 		priceFromCLP: 110000 as number | null,
 		airbnbUrl: null as string | null,
 		bookingUrl: null as string | null,
+		// Ficha de precio y consulta: ya no está en Lo que destaca; la usa Reservar (src/components/booking/PricePanel.astro, sin usar).
+		panel: {
+			label: 'Precio y consulta',
+			priceFrom: 'Desde',
+			priceUnit: 'CLP por noche',
+			// TODO: confirmar con los anfitriones si el precio es por cabaña.
+			season: 'Temporada alta',
+			capacity: 'Ideales para 4, hasta 5 personas',
+			minStay: { label: 'Estadía mínima', one: 'noche', other: 'noches' },
+		},
 	},
 } as const;

@@ -11,7 +11,16 @@ export const sources = { living, dormitorioDosCamas, cocina, dormitorioMatrimoni
 
 export type PhotoKey = keyof typeof sources;
 
-// Vista ampliada: el archivo a su ancho real, nunca más grande (ver --photo-max-width en tokens.css)
+// Orden de la vista ampliada: las 5 fotos. Las tres primeras son las de las tarjetas.
+export const viewerOrder: readonly PhotoKey[] = [
+	'living',
+	'cocina',
+	'dormitorioMatrimonial',
+	'dormitorioDosCamas',
+	'bano',
+];
+
+// Vista ampliada: el archivo a su ancho real, nunca más grande
 export async function viewerSrc(key: PhotoKey): Promise<string> {
 	const image = await getImage({ src: sources[key], width: es.photos[key].width, format: 'webp' });
 	return image.src;

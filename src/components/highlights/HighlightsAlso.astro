@@ -1,0 +1,86 @@
+---
+import { es } from '../../content/es';
+import Button from '../ui/Button.astro';
+
+const { alsoTitle, also, viewAllPhotos } = es.highlights;
+---
+
+<div class="also">
+	<div class="list">
+		<h3 class="title">{alsoTitle}</h3>
+		<ul class="items">
+			{also.map((item) => <li>{item}</li>)}
+		</ul>
+	</div>
+
+	<div class="actions">
+		<Button href="#reservar" wide>{es.booking.primaryCta}</Button>
+		<Button variant="secondary" wide data-viewer-open="living">{viewAllPhotos}</Button>
+	</div>
+</div>
+
+<style>
+	.also {
+		display: grid;
+		gap: var(--space-12);
+		padding-top: var(--space-12);
+		border-top: var(--border-width) solid var(--line-on-light);
+	}
+
+	.title {
+		font-size: var(--text-xl);
+		color: var(--text);
+	}
+
+	/* Dos columnas con líneas finas; la línea de abajo cierra la última fila */
+	.items {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		column-gap: var(--space-6);
+		margin: var(--space-6) 0 0;
+		padding: 0;
+		list-style: none;
+		border-bottom: var(--border-hairline);
+		font-size: var(--text-sm);
+		line-height: var(--leading-snug);
+	}
+
+	.items li {
+		padding-block: var(--space-4);
+		border-top: var(--border-hairline);
+	}
+
+	.actions {
+		display: grid;
+		gap: var(--space-4);
+		align-content: start;
+	}
+
+	@media (min-width: 48rem) {
+		.items {
+			column-gap: var(--space-8);
+		}
+
+		.actions {
+			grid-auto-flow: column;
+			justify-content: start;
+		}
+	}
+
+	/* Lista a la izquierda y botones a la derecha, en una fila */
+	@media (min-width: 76rem) {
+		.also {
+			grid-template-columns: repeat(12, minmax(0, 1fr));
+			column-gap: var(--space-8);
+		}
+
+		.list {
+			grid-column: 1 / span 5;
+		}
+
+		.actions {
+			grid-column: 6 / span 7;
+			justify-content: end;
+		}
+	}
+</style>
